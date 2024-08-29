@@ -119,7 +119,7 @@ This can be fixed by combining the integrator voltage with a part of the input b
 
 This offset can be compensated for by calculating an appropriate transfer function that tweaks the ADC input based on the input voltage. 
 
-To calculate this function, we go back to grade school mathematics - in order to determine the exact function of an nth degree polynomial, n+1 points are needed. 
+<s>To calculate this function, we go back to grade school mathematics - in order to determine the exact function of an nth degree polynomial, n+1 points are needed.<s.>
 
 In this case, we would need a three point calibration to determine the correct feedforward function. Available to the ADC are two absolute references - ground and the zener reference itself. Those two points could deliver a good linear approximation which centers the integrator to a large extent. However, I am not sure how the calibration algorithm is implemented in Multislope IV.
 
@@ -165,7 +165,7 @@ The Agilent-numbered LM399 sticks out - quite literally, since it’s plugged in
 
 Now for the most interesting part - the waveforms. Here’s the output of the DAM switch, which is a nice clean square wave. One unexpected surprise is that the PWM frequency was not constant, there were small changes in period with every cycle that I could not explain. 
 
-And no, this is not a triggering issue, I checked - I’ve been bitten by that mistake once before and I will make sure it won’t happen a second time. 
+<s>And no, this is not a triggering issue, I checked - I’ve been bitten by that mistake once before and I will make sure it won’t happen a second time.</s>
 
 The integrator waveform is 10 volts peak-to-peak, but not centered around zero - this could be to center the waveform around the coarse and fine ADCs’ inputs, like the patent says. Ramping through the entire input voltage range, we observe that the integrator peak-to-peak swing is tightly bounded, which is something I didn’t see in the primitive simulation - maybe the PWM frequency changes slightly to keep the integrator within a certain limit, although I am not sure what advantage this might have. 
 
@@ -191,11 +191,11 @@ Dan Sheingold, who edited the Analog Dialog magazine for 44 years, wrote a quick
 
 This PDF contains good arguments for both cases.
 
-I wouldn’t consider myself to be particularly religious, but I think I’ll stick to what my bible says and follow historical precedent instead of trying to apply mathematical notation to a schematic representation that is traditionally read left to right.
+<s>I wouldn’t consider myself to be particularly religious, but I think I’ll stick to what my bible says and follow historical precedent instead of trying to apply mathematical notation to a schematic representation that is traditionally read left to right.</s>
 
-On a more personal note, somehow, after hearing delta sigma all my life, sigma delta feels like a knock in the teeth.
+<s>On a more personal note, somehow, after hearing delta sigma all my life, sigma delta feels like a knock in the teeth.</s>
 
-What next? Investigating Multislope IV for nearly two years made me catch the delta-sigma bug. Here’s a simple modulator I build around the Pro Pico using a simple RC filter integrator and multibit feedback. I plan to elaborate upon this idea, but before I set out on my own delta-sigma adventure, I have more pressing matters to deal with, which will equip me with certain skills for this journey…
+<s>What next? Investigating Multislope IV for nearly two years made me catch the delta-sigma bug. Here’s a simple modulator I build around the Pro Pico using a simple RC filter integrator and multibit feedback. I plan to elaborate upon this idea, but before I set out on my own delta-sigma adventure, I have more pressing matters to deal with, which will equip me with certain skills for this journey…</s>
 
 What’s next? We have now established that Multislope IV is the future of precision ADC design, but the topmost of the line, the 3458A, still uses a simple Multislope III style runup and multislope rundown. I bet Keysight, who inherited the 3458A design from Agilent, who inherited from HP, didn’t dare to touch a nearly-perfect existing design, and couldn’t be bothered investing in modernization.
 
