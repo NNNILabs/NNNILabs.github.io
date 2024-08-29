@@ -2,67 +2,62 @@
 <html>
 <body>
 <h1>Agilent’s Multislope IV - A Delta-Sigma Story</h1>
-<p>
 
-An operational amplifier, a good capacitor, analog switches, a resistor network, a comparator and some logic. These simple ingredients, when put together, result in an ADC that is much greater than the sum of its parts. 
+<p align='justify'>An operational amplifier, a good capacitor, analog switches, a resistor network, a comparator and some logic. These simple ingredients, when put together, result in an ADC that is much greater than the sum of its parts.</p>
 
-The multislope ADC is a charge balancing topology. Input voltage is converted to a current, which is then integrated by a capacitor, with the process being controlled and idealized by an op-amp. Infinite integration is, unfortunately, not possible in the real world, so the feedback loop constructed around the integrator periodically injects controlled amounts of charge into it to keep it from saturating to either rail, by simply measuring if the integrator level is above or below zero, and injecting charge pulses of the opposite polarity. The logic keeps track of the number of charge pulses, and the difference between the number of negative and positive pulses, divided by the total number of pulses, is proportional to the input charge, and therefore, the input voltage.
+<p align='justify'>The multislope ADC is a charge balancing topology. Input voltage is converted to a current, which is then integrated by a capacitor, with the process being controlled and idealized by an op-amp. Infinite integration is, unfortunately, not possible in the real world, so the feedback loop constructed around the integrator periodically injects controlled amounts of charge into it to keep it from saturating to either rail, by simply measuring if the integrator level is above or below zero, and injecting charge pulses of the opposite polarity. The logic keeps track of the number of charge pulses, and the difference between the number of negative and positive pulses, divided by the total number of pulses, is proportional to the input charge, and therefore, the input voltage.</p>
 
-This simple concept has taken us from five-and-a-half to six-and-a-half, seven-and-a-half, and ultimately eight-and-a-half digits of resolution.
+<p align='justify'>This simple concept has taken us from five-and-a-half to six-and-a-half, seven-and-a-half, and ultimately eight-and-a-half digits of resolution.</p>
 
-The multislope lineage can be traced back to early HP bench DMMs from the 1970s and 1980s, and the charge balancing concept was known long before that.
+<p align='justify'>The multislope lineage can be traced back to early HP bench DMMs from the 1970s and 1980s, and the charge balancing concept was known long before that.</p>
 
-After nearly fifty years, the situation is mostly unchanged, with modern meters all having some form of charge-balancing ADC at their core.
+<p align='justify'>After nearly fifty years, the situation is mostly unchanged, with modern meters all having some form of charge-balancing ADC at their core.</p>
 
-However, in 2005, Ronald Swerlein, one of the designers of the 3458A, now working at Agilent, a first-generation HP descendant, filed a patent for a precision low noise ADC with fine and coarse feedback, and crossed an existing lineage with the previously pure integrating ADC line.
+<p align='justify'>However, in 2005, Ronald Swerlein, one of the designers of the 3458A, now working at Agilent, a first-generation HP descendant, filed a patent for a precision low noise ADC with fine and coarse feedback, and crossed an existing lineage with the previously pure integrating ADC line.</p>
 
-The result is a unique delta-sigma ADC that is a worthy successor to the multislope throne.
+<p align='justify'>The result is a unique delta-sigma ADC that is a worthy successor to the multislope throne.</p>
 
+<p align='justify'>As with all good stories, this one begins with The Art of Electronics, third edition. The section on multislope ADCs ends with a small footnote, describing the successor to the classic Multislope III charge-balancing scheme, called Multislope IV.</p>
 
+<p align='justify'>Upon taking a closer look, a lot of the features mentioned fly in the face of conventional multislope wisdom. Firstly, from previous experience, the integrator of a multislope-style ADC cannot be constrained in both time and frequency - if the modulation frequency is constant, the average integrator level depends on the input voltage, and if the integrator swing is constrained, the waveform’s frequency changes.</p>
 
-As with all good stories, this one begins with The Art of Electronics, third edition. The section on multislope ADCs ends with a small footnote, describing the successor to the classic Multislope III charge-balancing scheme, called Multislope IV.
+<p align='justify'>Secondly, in addition to a fine residue-reading ADC, a coarse ADC digitizes the integrator waveform for an unspecified reason.</p>
 
-[Window sill, AoE placed from above. Show relevant page and footnote, then fade into a close-up of the footnote (picture taken from PDF copy)]
+<p align='justify'>There is surprisingly little information about Multislope IV on the internet, but I had a large stroke of luck using keywords like fine and coarse ADC and managed to get my hands on the original patent, which is extremely well written and a very good read, by the way.</p>
 
-Upon taking a closer look, a lot of the features mentioned fly in the face of conventional multislope wisdom. Firstly, from previous experience, the integrator of a multislope-style ADC cannot be constrained in both time and frequency - if the modulation frequency is constant, the average integrator level depends on the input voltage, and if the integrator swing is constrained, the waveform’s frequency changes.
+<p align='justify'>In contrast to the pure and simple multislope ADC, delta-sigma has a rather interesting reputation. One is often confronted with various block diagrams and transfer functions, and IC manufacturers simply abstract the inner workings away into a box with the corresponding Greek letters on it.</p>
 
-Secondly, in addition to a fine residue-reading ADC, a coarse ADC digitizes the integrator waveform for an unspecified reason.
+<p align='justify'>One striking feature of delta-sigma ADCs is the disproportionate relationship between sample rate and resolution. Once again, this defies conventional wisdom - double digit resolution with sample rates ranging from tens of kilohertz to even megahertz.</p>
 
-There is surprisingly little information about Multislope IV on the internet, but I had a large stroke of luck using keywords like fine and coarse ADC and managed to get my hands on the original patent, which is extremely well written and a very good read, by the way.
+<p align='justify'>How is this possible? Under the hood, three mechanisms conspire to deliver high resolution at high sample rates - oversampling, noise shaping and digital filtering.</p>
 
-In contrast to the pure and simple multislope ADC, delta-sigma has a rather interesting reputation. One is often confronted with various block diagrams and transfer functions, and IC manufacturers simply abstract the inner workings away into a box with the corresponding Greek letters on it.
+<p align='justify'>When using an ADC to convert a voltage to a digital value, some noise is to be expected - the output code’s last few digits change randomly. This noise could be, in decreasing order of likelihood - from the signal being measured, from the ADC’s voltage reference or noisy supply rails, or even from the internal structure of the ADC itself.</p>
 
-One striking feature of delta-sigma ADCs is the disproportionate relationship between sample rate and resolution. Once again, this defies conventional wisdom - double digit resolution with sample rates ranging from tens of kilohertz to even megahertz.
+<p align='justify'>In some cases, with fixed hardware, averaging is a popular trick to reduce noise. As the input samples come in, they are gathered together in groups of N and averaged, resulting in an output every N samples, that should have much less noise. This also effectively increases the resolution of the ADC, but at the cost of decreasing the effective sample rate by N. However, if the ADC can be sped up by N, this decrease can be compensated for, and the resulting process has some distinct advantages, which are highlighted in this anecdote from the DSPGuide website.</p>
 
-How is this possible? Under the hood, three mechanisms conspire to deliver high resolution at high sample rates - oversampling, noise shaping and digital filtering.
+<p align='justify'>The 8-bit ADC is, in essence, overclocked by 1000, those many samples averaged and presented at the necessary 100Hz rate after discarding all but every 1000th sample. The process of discarding samples to achieve a lower effective sample rate is called decimation, and from my understanding, acts to reduce aliasing.</p>
 
-When using an ADC to convert a voltage to a digital value, some noise is to be expected - the output code’s last few digits change randomly. This noise could be, in decreasing order of likelihood - from the signal being measured, from the ADC’s voltage reference or noisy supply rails, or even from the internal structure of the ADC itself.
+<p align='justify'>This results in a noise improvement that scales down with the square root of the number of samples. Why square root? The answer has to do with the statistical nature of random noise, which I am in no position to explain.</p>
 
-In some cases, with fixed hardware, averaging is a popular trick to reduce noise. As the input samples come in, they are gathered together in groups of N and averaged, resulting in an output every N samples, that should have much less noise. This also effectively increases the resolution of the ADC, but at the cost of decreasing the effective sample rate by N. However, if the ADC can be sped up by N, this decrease can be compensated for, and the resulting process has some distinct advantages, which are highlighted in this anecdote from the DSPGuide website.
+<p align='justify'>To elaborate upon what I mentioned earlier - some noise, from an AC perspective, comes from the ADC’s inherent conversion process. Signals in the real world have basically infinite resolution, which the ADC reads and rounds off to the nearest value from a set of values, determined by its resolution. For example, an 8-bit ADC converts a voltage within its input range to one of 256 values.</p>
 
-The 8-bit ADC is, in essence, overclocked by 1000, those many samples averaged and presented at the necessary 100Hz rate after discarding all but every 1000th sample. The process of discarding samples to achieve a lower effective sample rate is called decimation, and from my understanding, acts to reduce aliasing.
+<p align='justify'>Compared to the smooth input signal, the digitized signal is much blockier. One could say that this is just the input signal, but with added noise. This artificial noise is called quantization noise, since it results from the quantization that the ADC performs on its input.</p>
 
-This results in a noise improvement that scales down with the square root of the number of samples. Why square root? The answer has to do with the statistical nature of random noise, which I am in no position to explain. 
+<p align='justify'>This subject has already been treated in great mathematical depth, I will leave some resources in the description. What it comes down to is this formula, which describes the signal to quantization noise ratio or SQNR for an N bit ADC. And for a delta-sigma ADC, SNQR directly determines resolution.</p>
 
-To elaborate upon what I mentioned earlier - some noise, from an AC perspective, comes from the ADC’s inherent conversion process. Signals in the real world have basically infinite resolution, which the ADC reads and rounds off to the nearest value from a set of values, determined by its resolution. For example, an 8-bit ADC converts a voltage within its input range to one of 256 values.
+<p align='justify'>In digital audio, the addition of noise, called dither, can be used to encode the signal statistically in the noise, in the words of Nigel Redmon, whose website has a nice widget that lets you play around with dithering.</p>
 
-Compared to the smooth input signal, the digitized signal is much blockier. One could say that this is just the input signal, but with added noise. This artificial noise is called quantization noise, since it results from the quantization that the ADC performs on its input.
+<p align='justify'>A delta-sigma modulator, in this context, can be said to generate shaped dither - the noise is concentrated in higher frequencies beyond the region of interest. In other words, the noise has a high-pass characteristic. One interesting point to note is that noise shaping requires feedback - there is no way to implement it directly, for example with a lookup table of dither values.</p>
 
-This subject has already been treated in great mathematical depth, I will leave some resources in the description. What it comes down to is this formula, which describes the signal to quantization noise ratio or SQNR for an N bit ADC. And for a delta-sigma ADC, SNQR directly determines resolution.
+<p align='justify'>The modulator’s block diagram can be superimposed almost perfectly on top of the simple multislope circuit. This almost a divine miracle - from the delta-sigma point of view, the multislope ADC is simply a first-order modulator without a complicated digital filter, and from the point of view of a multislope ADC, delta-sigma is multislope but with added digital signal processing.</p>
 
-In digital audio, the addition of noise, called dither, can be used to encode the signal statistically in the noise, in the words of Nigel Redmon, whose website has a nice widget that lets you play around with dithering.
+<p align='justify'>A simple delta-sigma ADC is considered integrating in that it uses an integrator to accumulate the error, that is the difference between the input voltage and the feedback voltage, and corrects the error via negative feedback in the next clock cycle.</p>
 
-A delta-sigma modulator, in this context, can be said to generate shaped dither - the noise is concentrated in higher frequencies beyond the region of interest. In other words, the noise has a high-pass characteristic. One interesting point to note is that noise shaping requires feedback - there is no way to implement it directly, for example with a lookup table of dither values.
+<p align='justify'>How the modulator performs noise shaping might be a little difficult to wrap one’s head around, so let’s take a look at a simple Falstad filter simulation.</p>
 
-The modulator’s block diagram can be superimposed almost perfectly on top of the simple multislope circuit. This almost a divine miracle - from the delta-sigma point of view, the multislope ADC is simply a first-order modulator without a complicated digital filter, and from the point of view of a multislope ADC, delta-sigma is multislope but with added digital signal processing. 
+<p align='justify'>This is a simple high-pass filter, and if I were to use it to close the feedback loop around an op-amp, the resulting transfer function is that of a low-pass filter. Doing the opposite - using a low-pass filter to close the loop results in a high-pass transfer characteristic.</p>
 
-A simple delta-sigma ADC is considered integrating in that it uses an integrator to accumulate the error, that is the difference between the input voltage and the feedback voltage, and corrects the error via negative feedback in the next clock cycle.
-
-How the modulator performs noise shaping might be a little difficult to wrap one’s head around, so let’s take a look at a simple Falstad filter simulation. 
-
-This is a simple high-pass filter, and if I were to use it to close the feedback loop around an op-amp, the resulting transfer function is that of a low-pass filter. Doing the opposite - using a low-pass filter to close the loop results in a high-pass transfer characteristic.
-
-This should already give us a clue - the modulator has an integrator in the feedback loop. And that means the quantizer’s output should have a high-pass characteristic. To test this theory, a more powerful simulation engine capable of calculating an FFT is necessary. 
+<p align='justify'>This should already give us a clue - the modulator has an integrator in the feedback loop. And that means the quantizer’s output should have a high-pass characteristic. To test this theory, a more powerful simulation engine capable of calculating an FFT is necessary.</p>
 
 While I am aware that Falstad has an FFT feature, it lacks the knobs that let you fine tune certain parameters like LTspice does.
 
