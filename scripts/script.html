@@ -2,6 +2,239 @@
 <html>
 <body>
 <h1>Hello World</h1>
-<p>I'm hosted with GitHub Pages.</p>
+<p>
+
+Agilent’s Multislope IV - A Delta-Sigma Story
+
+An operational amplifier, a good capacitor, analog switches, a resistor network, a comparator and some logic. These simple ingredients, when put together, result in an ADC that is much greater than the sum of its parts. 
+
+The multislope ADC is a charge balancing topology. Input voltage is converted to a current, which is then integrated by a capacitor, with the process being controlled and idealized by an op-amp. Infinite integration is, unfortunately, not possible in the real world, so the feedback loop constructed around the integrator periodically injects controlled amounts of charge into it to keep it from saturating to either rail, by simply measuring if the integrator level is above or below zero, and injecting charge pulses of the opposite polarity. The logic keeps track of the number of charge pulses, and the difference between the number of negative and positive pulses, divided by the total number of pulses, is proportional to the input charge, and therefore, the input voltage.
+
+This simple concept has taken us from five-and-a-half to six-and-a-half, seven-and-a-half, and ultimately eight-and-a-half digits of resolution.
+
+The multislope lineage can be traced back to early HP bench DMMs from the 1970s and 1980s, and the charge balancing concept was known long before that.
+
+After nearly fifty years, the situation is mostly unchanged, with modern meters all having some form of charge-balancing ADC at their core.
+
+However, in 2005, Ronald Swerlein, one of the designers of the 3458A, now working at Agilent, a first-generation HP descendant, filed a patent for a precision low noise ADC with fine and coarse feedback, and crossed an existing lineage with the previously pure integrating ADC line.
+
+The result is a unique delta-sigma ADC that is a worthy successor to the multislope throne.
+
+
+
+As with all good stories, this one begins with The Art of Electronics, third edition. The section on multislope ADCs ends with a small footnote, describing the successor to the classic Multislope III charge-balancing scheme, called Multislope IV.
+
+[Window sill, AoE placed from above. Show relevant page and footnote, then fade into a close-up of the footnote (picture taken from PDF copy)]
+
+Upon taking a closer look, a lot of the features mentioned fly in the face of conventional multislope wisdom. Firstly, from previous experience, the integrator of a multislope-style ADC cannot be constrained in both time and frequency - if the modulation frequency is constant, the average integrator level depends on the input voltage, and if the integrator swing is constrained, the waveform’s frequency changes.
+
+Secondly, in addition to a fine residue-reading ADC, a coarse ADC digitizes the integrator waveform for an unspecified reason.
+
+There is surprisingly little information about Multislope IV on the internet, but I had a large stroke of luck using keywords like fine and coarse ADC and managed to get my hands on the original patent, which is extremely well written and a very good read, by the way.
+
+In contrast to the pure and simple multislope ADC, delta-sigma has a rather interesting reputation. One is often confronted with various block diagrams and transfer functions, and IC manufacturers simply abstract the inner workings away into a box with the corresponding Greek letters on it.
+
+One striking feature of delta-sigma ADCs is the disproportionate relationship between sample rate and resolution. Once again, this defies conventional wisdom - double digit resolution with sample rates ranging from tens of kilohertz to even megahertz.
+
+How is this possible? Under the hood, three mechanisms conspire to deliver high resolution at high sample rates - oversampling, noise shaping and digital filtering.
+
+When using an ADC to convert a voltage to a digital value, some noise is to be expected - the output code’s last few digits change randomly. This noise could be, in decreasing order of likelihood - from the signal being measured, from the ADC’s voltage reference or noisy supply rails, or even from the internal structure of the ADC itself.
+
+In some cases, with fixed hardware, averaging is a popular trick to reduce noise. As the input samples come in, they are gathered together in groups of N and averaged, resulting in an output every N samples, that should have much less noise. This also effectively increases the resolution of the ADC, but at the cost of decreasing the effective sample rate by N. However, if the ADC can be sped up by N, this decrease can be compensated for, and the resulting process has some distinct advantages, which are highlighted in this anecdote from the DSPGuide website.
+
+The 8-bit ADC is, in essence, overclocked by 1000, those many samples averaged and presented at the necessary 100Hz rate after discarding all but every 1000th sample. The process of discarding samples to achieve a lower effective sample rate is called decimation, and from my understanding, acts to reduce aliasing.
+
+This results in a noise improvement that scales down with the square root of the number of samples. Why square root? The answer has to do with the statistical nature of random noise, which I am in no position to explain. 
+
+To elaborate upon what I mentioned earlier - some noise, from an AC perspective, comes from the ADC’s inherent conversion process. Signals in the real world have basically infinite resolution, which the ADC reads and rounds off to the nearest value from a set of values, determined by its resolution. For example, an 8-bit ADC converts a voltage within its input range to one of 256 values.
+
+Compared to the smooth input signal, the digitized signal is much blockier. One could say that this is just the input signal, but with added noise. This artificial noise is called quantization noise, since it results from the quantization that the ADC performs on its input.
+
+This subject has already been treated in great mathematical depth, I will leave some resources in the description. What it comes down to is this formula, which describes the signal to quantization noise ratio or SQNR for an N bit ADC. And for a delta-sigma ADC, SNQR directly determines resolution.
+
+In digital audio, the addition of noise, called dither, can be used to encode the signal statistically in the noise, in the words of Nigel Redmon, whose website has a nice widget that lets you play around with dithering.
+
+A delta-sigma modulator, in this context, can be said to generate shaped dither - the noise is concentrated in higher frequencies beyond the region of interest. In other words, the noise has a high-pass characteristic. One interesting point to note is that noise shaping requires feedback - there is no way to implement it directly, for example with a lookup table of dither values.
+
+The modulator’s block diagram can be superimposed almost perfectly on top of the simple multislope circuit. This almost a divine miracle - from the delta-sigma point of view, the multislope ADC is simply a first-order modulator without a complicated digital filter, and from the point of view of a multislope ADC, delta-sigma is multislope but with added digital signal processing. 
+
+A simple delta-sigma ADC is considered integrating in that it uses an integrator to accumulate the error, that is the difference between the input voltage and the feedback voltage, and corrects the error via negative feedback in the next clock cycle.
+
+How the modulator performs noise shaping might be a little difficult to wrap one’s head around, so let’s take a look at a simple Falstad filter simulation. 
+
+This is a simple high-pass filter, and if I were to use it to close the feedback loop around an op-amp, the resulting transfer function is that of a low-pass filter. Doing the opposite - using a low-pass filter to close the loop results in a high-pass transfer characteristic.
+
+This should already give us a clue - the modulator has an integrator in the feedback loop. And that means the quantizer’s output should have a high-pass characteristic. To test this theory, a more powerful simulation engine capable of calculating an FFT is necessary. 
+
+While I am aware that Falstad has an FFT feature, it lacks the knobs that let you fine tune certain parameters like LTspice does.
+
+Following a recipe from a paper published in 2020, I got a simple modulator up and running. The quantizer’s output is basically a cross between pulse density and pulse width modulation - the average value is representative of the input. Performing an FFT shows us exactly what we wanted to see - a 20dB per decade upward slope, indicating a first-order highpass filter response. The slope extends right up to half the modulator’s clock frequency.
+
+Oversampling comes into play - for a fixed input frequency limit, the higher the modulation, the lower the quantization noise at that frequency, up until the physical noise floor is reached. 
+
+Just like a regular filter, multiple integrator stages can be cascaded to achieve a higher-order response, increasing the high-pass slope by 20dB for each stage added. This way, a third or even fourth order response can be achieved. The advantage here is that a smaller oversampling frequency is needed to achieve higher SQNR at a given frequency.
+
+[Digital filtering]
+
+A lot of smart people have told me that ADCs fit better on a spectrum than into rigid categories. This is especially true for integrating ADCs. The subject matter of today’s video falls into a similar grey area between multislope ADCs and delta-sigma ADCs. John Pickering was in disbelief when I told him about Multislope IV being delta-sigma, and Jaromir insists that a first-order modulator has no right to call itself delta-sigma, or at least, a first order modulator and multislope are basically identical.
+
+[Pickering: ‘There seem to be no hints that the 34410A uses S-Δ and I had assumed that it was the multi-slope + digitised remainder that the 34401A uses.’
+Jaromir: ‘I'm aware you are RE-ing MS IV; with its strong overlap with DS modulators.’]
+
+Although the modulators are basically the same circuit, I like to think that the way the output is processed makes a significant difference.
+
+In the case of a multislope ADC, the number of positive and negative switch transitions are summed up, and scaled by a few constants. This is basically equivalent to simple averaging. It could be argued that averaging is also a type of digital filter with a specific frequency response, but at this point, blurring the distinction even further just leads to confusion and ambiguity, so I will draw the line here.
+
+Digital filters are a simple extension of a moving average. Moving average is again summing and dividing N samples by N, but instead of acting over blocks of N samples, the N-sample window moves by one sample every time. What this means is that each new sample is averaged with N-1 previous samples. With a little mathematical rearranging, it is equivalent to multiplying N samples with the coefficient 1/N and then summing them.
+
+This incredible website visualizes the frequency and step response of various filters, including moving average. The frequency response is not the most spectacular, with shallow notches at 1/N. The step response is as expected - getting to the correct average value takes N samples. 
+
+It is the coefficients that make all the difference - if we can somehow carefully pick them, we can achieve a much better response that is extremely close to an ideal brickwall filter. Luckily, mathematics has already provided us with the tools necessary to calculate appropriate coefficient values. Although a monkey with a typewriter might come up with the correct coefficients given enough time, the sinc function is the right way to go about it. 
+
+The sine cardinal, or sinc, is basically sin of x divided by x. The coefficients for an ideal low-pass filter are just the discrete values of the sinc function at certain points. Of course, there is an additional complication - since we are basically truncating the function at both ends to fit it within a given number of coefficients, a non-ideal response results. For this reason, the entire function is gracefully tapered by a windowing function.
+
+Going back to fiiir, we observe that the step response of a windowed-sinc lowpass filter is much faster than that of a moving average filter for the same number of samples.
+
+The nearly ideal brickwall response of a digital filter takes perfect advantage of the noise-shaped oversampled output of the modulator, and leaves behind very little quantization noise.
+
+It is this combination of oversampling, noise shaping and digital filtering, all taking advantage of each other’s properties, that make delta-sigma achieve high resolution at impressive sample rates.
+
+With the basics out of the way, we can now take a closer look at the Multislope IV modulator.
+
+We are immediately faced by a lot of unfamiliar blocks like AC and DC feedforward. Most importantly, the function of the coarse ADC is still puzzling.
+
+It turns out that this is something that AoE mentioned, but never elaborated upon - it would have made for an interesting X-chapter. However, the website from which AoE basically borrowed the delta-sigma section does elaborate further. The comparator in the simple delta sigma modulator can be considered a one-bit ADC, and feedback is one bit too - two values, that is the positive and negative reference currents, are switched into the integrator.
+
+This can naturally be extended to multiple bits, with the advantage that SQNR increases by 3dB for every additional feedback bit. Back to LTspice - by simulating a multibit quantizer using a behavioural voltage source, I can implement multibit feedback. It’s interesting to see that as the number of bits increases, the output of the quantizer is more or less PCM with added noise-shaped dither that is generated by the modulator. The advantage of multibit quantizers is that high SNQR can be achieved without needing large oversampling ratios or a higher order modulator, the latter of which is impractical to implement in discrete analog, but is much easier on the silicon level.
+
+The linearity of a delta-sigma ADC ultimately depends on the feedback DAC. In the case of one-bit feedback, since there are only two feedback levels, linearity is theoretically perfect. In a multibit system, more exacting requirements are placed on the DAC, which should ideally be both highly linear and fast. Multislope IV fulfills both requirements by using a PWM DAC - multibit feedback is achieved while also having just two levels, maintaining nearly ideal linearity, which ultimately depends on timing accuracy. Precise timing is much easier to achieve on the part-per-million or even -billion level than similarly precise voltages or currents.
+
+The PWM DAC, as implemented in Multislope IV, is described in a separate patent. It consists of a capacitive level shifter driving a complementary pair of MOSFETs which switch the positive and negative references. An additional op-amp unloads the MOSFETs and reduces errors that arise from their on resistance.
+
+Implementing a simplified version of this modulator in Falstad reveals two problems. 
+
+The first is a DC offset on the integrator that depends on the input voltage. In a precision ADC, this can lead to a few problems. First, a large integrator swing risks saturating the integrator op-amp to the supply rails, and operating close to them reduces linearity. Second, a large DC component on the integrator waveform exaggerates the effect of dielectric absorption. Third, a larger dynamic range is expected of the coarse ADC that digitizes the integrator.
+
+This can be fixed by combining the integrator voltage with a part of the input before digitization, a method called feedforward. The actual implementation involves a simple resistor summer and takes advantage of the ADC’s differential input to perform part of the calculation. However, the integrator’s DC offset is not linearly dependent on the input - simplifying the modulator and feeding in a ramp waveform, we notice that the offset has a quadratic characteristic, which makes sense since integrating a linear function results in a quadratic one.
+
+This offset can be compensated for by calculating an appropriate transfer function that tweaks the ADC input based on the input voltage. 
+
+To calculate this function, we go back to grade school mathematics - in order to determine the exact function of an nth degree polynomial, n+1 points are needed. 
+
+In this case, we would need a three point calibration to determine the correct feedforward function. Available to the ADC are two absolute references - ground and the zener reference itself. Those two points could deliver a good linear approximation which centers the integrator to a large extent. However, I am not sure how the calibration algorithm is implemented in Multislope IV.
+
+Second, feeding an AC input to the ADC results in a higher order offset that is not canceled by simple feedforward. The PWM feedback after filtering still represents the input waveform perfectly, but there is an additional component that could cause errors. The integrator also spikes in response to a step on the input, risking saturation. This is blind speculation, but I think the AC feedforward circuit eliminates both those problems.
+
+Feeding an AC waveform into what is basically an integrating ADC feels wrong, but since the modulation frequency is a rather high 500kHz and the digital filter can be configured to provide, for example, an RMS output, this is a valid method to digitize AC waveforms.
+
+What makes Multislope IV stand out from a regular delta sigma ADC is the fine ADC, which digitizes the integrator near zero crossings. The readings from the fine and coarse ADC are combined into a 16 bit value before being filtered. The coarse ADC has an 8 bit resolution, while the fine ADC is 10 bit. This indicates that two bits overlap, which could be useful for calibrating the gain of both ADCs. The patent has a paragraph describing this, and Jim Williams employed a similar overlapping scheme in his 20-bit DAC design. 
+
+To explain what the fine ADC might be doing,  let’s take a small detour.
+
+This collection of components on a copper-clad board was my attempt at creating a 10.000000V reference using an ADR1399 and PWM feedback. The Zener voltage is a real number anywhere between 6.75V and 7.3V, and to get exactly 10V out requires a very high, almost impractically high PWM resolution and some extreme filtering. 
+
+This has already been done before, and to achieve high resolution, quite ironically, the PWM carrier was modulated with delta-sigma.
+
+However, Femboy had a different idea - Given a limited resolution PWM, both the numerator and denominator could be varied to achieve the desired ratio. This simple program calculates a set of numerator and denominator values depending on the measured value of the Zener voltage and the desired output ratio. This method is surprisingly effective, with very small errors for a given ratio. The way the code is written also generates the values with the least possible denominator, so in terms of PWM, the highest possible PWM frequency with a given duty cycle is generated.
+
+Given the effectiveness of this method, I was curious to see how well it would perform as a DAC. While the error generally stays within 0.1% with a 256-level PWM and a 0.0001 ratio resolution, the scheme quickly falls apart for simple fractions like ½ and ⅓, because, around these values, a lot of fractions simplify and we end up with the same set of numerators and denominators. 
+
+The connection to delta-sigma is that the modulator tries to generate a sequence of ones and zeroes in a given number of clock periods where the ratio of ones to zeroes is as close to the input voltage as possible, with the added advantage of the sequence having a high-pass quantization noise characteristic that the brickwall digital filter largely removes.
+
+It is also given to the same problem of errors around simple fractions, that is, integer voltages, known in literature as the sticky zero problem and idle tones. The latter is caused by the feedback loop falling into a repeating set of patterns that the filter interprets as a low frequency tone. 
+
+A multislope ADC also has problems with repeating patterns around 0V that cause the integrator to have a large DC component that affects INL because of capacitor dielectric absorption.
+
+A higher order modulator randomizes these errors out to a large extent, but since the Multislope IV modulator is outwardly a simple first-order system, the fine ADC could be used to add some extra granularity to the modulator output to prevent these problems.
+
+The patent also suggests that a dither signal is applied digitally to the output of the coarse ADC before it is fed into the DAC, which should help eliminate this problem.
+
+Splitting the integrator digitization into fine and coarse parts could have another reason more grounded in the limitations of semiconductor technology of the time - 16-bit multi-megasample ADCs were probably prohibitively expensive. 
+
+At this point I have to mention the fruits of technological progress in the year 2024 - ADI just released a 20-bit 40 megasample per second ADC, the AD4080.
+
+It is interesting to note that despite having a 10-bit coarse ADC, only 6 bits are fed back to the integrator. Based on some literature John Pickering very kindly provided to me, feedback beyond five or six bits provides diminishing returns. Another reason could be DNL - since the ADC is part of a closed feedback loop, DNL contributes to noise. If resolution is reduced artificially by using only the upper MSBs, DNL is halved for every LSB not used.
+
+What might have turned into a long, boring video filled purely with theory and speculation was saved by Max from the reps Discord, who loaned me his L4411A. The L4411A, along with the 34410A, uses a Multislope IV ADC. 
+
+The L4411A is a stripped-down rack-mounted version of the 34410A, and therefore lacks any trace of a user interface. The variety of connectors on the back provide various means of communicating with the meter. Max also sent me some AR488 Arduino GPIB adapters, which I found very helpful before Dimin helped me set up a LAN in my room.
+
+Thankfully there is not much on the outside that could distract us from what we are really after - the delicious meat that is the ADC, that lies under this shield. And once that is off, the individual sections are easy to make out.
+
+The Agilent-numbered LM399 sticks out - quite literally, since it’s plugged into a female header. Here’s the DAM switch, which feeds a resistor network, which in turn feeds the current flowing through it into the integrator. Surprisingly, the helper op-amp from the DAC patent is missing on the actual board. The integrator capacitor looks to be a commercial off-the-shelf C0G. The coarse and the fine ADCs feed directly into the Xilinx FPGA that forms the brains behind this operation.
+
+Now for the most interesting part - the waveforms. Here’s the output of the DAM switch, which is a nice clean square wave. One unexpected surprise is that the PWM frequency was not constant, there were small changes in period with every cycle that I could not explain. 
+
+And no, this is not a triggering issue, I checked - I’ve been bitten by that mistake once before and I will make sure it won’t happen a second time. 
+
+The integrator waveform is 10 volts peak-to-peak, but not centered around zero - this could be to center the waveform around the coarse and fine ADCs’ inputs, like the patent says. Ramping through the entire input voltage range, we observe that the integrator peak-to-peak swing is tightly bounded, which is something I didn’t see in the primitive simulation - maybe the PWM frequency changes slightly to keep the integrator within a certain limit, although I am not sure what advantage this might have. 
+
+This might also explain why the coarse ADC is so fast despite the modulation frequency only being 500kHz - the integrator slope could be calculated in real time, and the period adjusted accordingly to make sure the integrator does not exceed a limit. The integrator response with a stepped input contradicts this, however, as the integrator peak-to-peak swing increases as expected as the input passes through zero. The cyan trace, which is the output of the AC feedforward circuit, shows how it prevents a fast step from disturbing the integrator’s balance, essentially bandwidth limiting the input.
+
+That was just the part that lay exposed to an extra-manufacturer investigation. The actual secret of how the data from the modulator is processed and filtered lies inside this FPGA. 
+
+The patent itself offers no details or explanation about the type and implementation of the digital filter, which is the final step in the conversion process and delivers a 6.5 digit reading from a stream of combined 16-bit values from the fine and coarse ADCs.
+
+I looked into extracting the bitstream as it is loaded from external memory and reverse engineering it, since such tools exist. The FPGA field has progressed very quickly since this meter was first designed, so software that specifically decodes the bitstream of this Xilinx Spartan XC3S200 might not exist, or be completely out of my skill set to try. So, in this case, Agilent gets to keep their secrets.
+
+While I was at it, I measured the linearity of the meter’s 10V range, which barely skirts the 1 ppm level. Some of this might be a contribution from the AD5791 DAC itself, and I’m not sure if subtracting the latter’s INL from the former’s is a valid method to remove the DAC’s contribution.
+
+Next up, a quick shorted inputs noise test at all voltage ranges with 100 NPLC integration time. The RMS noise aligns well with the meter specifications, and it’s good to know that I’m not the only one with banding issues.
+
+A video about delta-sigma ADCs would be incomplete without at least mentioning the naming controversy - is it delta-sigma or sigma-delta?
+
+Both names have found widespread use in datasheets, app notes and papers, so what you decide to use could be determined by the toss of a coin.
+
+While an argument could be made that delta sigma is technically correct - the inventors of the method called it that in their original paper from 1962 - and it also makes sense, since the difference between the input voltage and the reference voltage is calculated before integration.
+
+Dan Sheingold, who edited the Analog Dialog magazine for 44 years, wrote a quick note regarding terminology, where he made a very good point and justified it with a very good example - so sigma delta is also technically correct. 
+
+This PDF contains good arguments for both cases.
+
+I wouldn’t consider myself to be particularly religious, but I think I’ll stick to what my bible says and follow historical precedent instead of trying to apply mathematical notation to a schematic representation that is traditionally read left to right.
+
+On a more personal note, somehow, after hearing delta sigma all my life, sigma delta feels like a knock in the teeth.
+
+What next? Investigating Multislope IV for nearly two years made me catch the delta-sigma bug. Here’s a simple modulator I build around the Pro Pico using a simple RC filter integrator and multibit feedback. I plan to elaborate upon this idea, but before I set out on my own delta-sigma adventure, I have more pressing matters to deal with, which will equip me with certain skills for this journey…
+
+What’s next? We have now established that Multislope IV is the future of precision ADC design, but the topmost of the line, the 3458A, still uses a simple Multislope III style runup and multislope rundown. I bet Keysight, who inherited the 3458A design from Agilent, who inherited from HP, didn’t dare to touch a nearly-perfect existing design, and couldn’t be bothered investing in modernization.
+
+However, most modern bench DMMs from Keysight, who probably own the Agilent patent, seem to follow the Multislope IV recipe, like the 34461A and the high-end 34470A, both having the giveaway combination of fine and coarse ADCs.
+
+After having spent nearly two years investigating Multislope IV, I seem to have caught the delta-sigma bug as well. Here’s a simple modulator I built around the Pro Pico using a simple RC filter integrator and multibit feedback.
+
+I plan to elaborate upon this idea, a fact that I will take advantage of for my Bachelor’s thesis. But before I set out on my own delta-sigma adventure, I have more pressing matters to deal with… matters which will equip me with the skills and experience needed for this journey. If I can’t do it with multislope, I certainly can’t do it with delta-sigma!
+
+https://patents.google.com/patent/US7176819B1
+https://www.worldradiohistory.com/Archive-Company-Publications/HP-Journal/80s/HPJ-1989-04.pdf
+https://www.dspguide.com/new/appexam.htm
+https://dsp.stackexchange.com/questions/48205/why-does-signal-averaging-reduces-noise-levels-by-more-than-sqrtn
+https://www.analog.com/media/en/training-seminars/tutorials/MT-001.pdf
+https://www.earlevel.com/main/2014/03/15/dither-widget/
+https://www.youtube.com/watch?v=zWpWIQw7HWU
+https://wiki.analog.com/university/courses/electronics/electronics-lab-17
+https://www.webpages.uidaho.edu/~jfrenzel/340/Handouts/analog_digital_converters/Delta%20Sigma/Using%20Delta-Sigma%20Can%20Be%20As%20East%20As%20ADC.pdf
+https://www.electronicdesign.com/technologies/analog/article/21778617/using-delta-sigma-can-be-as-easy-as-adc-part-5
+https://www.analog.com/media/en/training-seminars/design-handbooks/system-applications-guide/Section14.pdf
+https://www.falstad.com/afilter/circuitjs.html?startCircuit=filt-hipass.txt
+https://www.dspguide.com/CH16.PDF
+https://digitalcommons.calpoly.edu/cgi/viewcontent.cgi?article=3771&context=theses
+https://fiiir.com/
+https://www.beis.de/Elektronik/DeltaSigma/DeltaSigma.html
+https://patentimages.storage.googleapis.com/c7/f7/1e/41d8db4c83b108/US6876241.pdf
+https://tinyurl.com/2dywdafg
+https://radiokot-ru.translate.goog/forum/viewtopic.php?p=3113890&_x_tr_sl=auto&_x_tr_tl=en&_x_tr_hl=de#p3113890
+https://classes.engr.oregonstate.edu/eecs/spring2021/ece627/Lecture%20Notes/First-Order%20D-S%20ADC.pdf
+https://www.analog.com/media/en/technical-documentation/data-sheets/ad4080.pdf
+Experiences with Continuous Time, Discrete Component DS ADCs, John Pickering, 2019
+https://www.allaboutcircuits.com/technical-articles/understanding-analog-to-digital-converter-differential-nonlinearity-dnl-error/
+https://github.com/epfl-vlsc/bitfiltrator
+https://www.transcat.com/media/pdf/L4411A.pdf
+https://www.hit.bme.hu/~papay/edu/Conv/pdf/DSorSD.pdf
+https://www.flickr.com/photos/eevblog/albums/72157650890418469/
+https://www.flickr.com/photos/eevblog/albums/72157634225126018/
+
+
+</p>
 </body>
 </html>
