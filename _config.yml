@@ -1,0 +1,6 @@
+title: NNNILabs
+baseurl: ""
+url: "http://nnnilabs.net"
+
+plugins:
+  - jekyll-coffeescript

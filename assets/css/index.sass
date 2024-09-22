@@ -1,0 +1,68 @@
+---
+---
+
+// center align
+#categories
+	display: flex
+	justify-content: center
+	align-items: center
+
+// date alignment
+sub
+	position: relative
+	bottom: 3px
+	left: 10px
+
+// general
+ul
+	list-style: none
+	text-indent: .5em
+	margin-left: 0
+	padding-left: 0
+
+// indentation
+ul ul
+	margin-left: 3.75em
+
+// dashes
+li:before
+	content: ""
+	display: inline-block
+	width: 20px
+	height: 0
+	position: relative
+	left: -7px
+	bottom: 0.2em
+	border-top: 2px solid
+
+// magic (anchor for absolute positioning)
+#categories ul, li, ul.posts
+	position: relative
+
+// main border
+li .border
+	display: block
+	position: absolute
+	height: calc(100% + 1px)
+	top: 10px
+	left: 0
+	border-left: 2px solid
+
+// posts border
+.posts .border
+	height: calc(100% - 0.75em)
+	top: 0
+
+// videos border
+#videos .posts .border
+	height: calc(100% - 2em)
+
+// scripts border
+#videos .posts li .border
+	height: 50%
+	top: 1px 
+
+// recommended resources border
+#rr .border
+	height: calc(100% - 0.75em)
+	top: 3px
