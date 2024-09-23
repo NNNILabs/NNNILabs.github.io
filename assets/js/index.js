@@ -30,7 +30,7 @@ heights.forEach((h, i) => {
 	while (h > heightmap[i][j]) j++
 
 	css.textContent += `${selectors[i]} .posts .border {
-	height: calc(100% - ${heightmap[i][j - 1]}px + 10.5px)
+	height: calc(100% - ${heightmap[i][j - 1]}px + 9.7px)
 } `
 })
 
