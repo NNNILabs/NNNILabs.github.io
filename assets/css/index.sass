@@ -6,6 +6,7 @@
 	display: flex
 	justify-content: center
 	align-items: center
+	text-align: left
 
 // date alignment
 sub
@@ -46,32 +47,15 @@ li:before
 li .border
 	display: block
 	position: absolute
-	height: calc(100% + 1px)
+	height: calc(100% + 1.5px)
 	top: 10px
 	left: 0
 	border-left: 2px solid
 
-// posts border
+// posts border alignment
 .posts .border
-	height: calc(100% - 0.75em)
 	top: 0
 
-// videos border
-#videos .posts .border
-	height: calc(100% - 2em)
-
-// scripts border
+// scripts border sizing
 #videos .posts li .border
-	height: 50%
-	top: 1px 
-
-// recommended resources border
-#rr .border
-	top: 3px
-	// increase border on phones
-	@media (width < 360px)
-		height: calc(100% - 54px)
-	@media (360px <= width < 590px)
-		height: calc(100% - 33px)
-	@media (width >= 590px)
-		height: calc(100% - 0.75em)
+	height: 55%

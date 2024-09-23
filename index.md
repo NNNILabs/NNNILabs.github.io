@@ -2,6 +2,7 @@
 layout: default
 title: "NNNILabs"
 ---
+
 <link rel="stylesheet" href="{{ "/assets/css/index.css" | relative_url }}">
 
 # NNNILabs
@@ -22,12 +23,13 @@ title: "NNNILabs"
 				<ul class="posts">
 					<div class="border"></div>
 					{% for post in item %}
-					<li><a href="{{ post.url }}">{{ post.title | remove: '<p>' | remove: '</p>' }}</a><sub>{{ post.date | date: "%d.%m.%Y" }}</sub>
-						<!-- no clue why i can't just use "item" here -->
-						{% if currentcategory == "videos" %}	
-						<ul><div class="border"></div><li><a href='{{ "/scripts/" | append: post.title | append: ".txt" | relative_url }}'>script</a></li></ul>
-						{% endif %}
-					</li>
+						{% assign last = "" %}
+						{% if forloop.last == true %} {% assign last = "class=last" %} {% endif %}
+						<li {{ last }}><a href="{{ post.url }}" target="_blank">{{ post.title | remove: '<p>' | remove: '</p>' }}</a><sub>{{ post.date | date: "%d.%m.%Y" }}</sub>
+							{% if currentcategory == "videos" %}	
+							<ul><div class="border"></div><li><a href='{{ "/scripts/" | append: post.title | append: ".txt" | relative_url }}' target="_blank">script</a></li></ul>
+							{% endif %}
+						</li>
 					{% endfor %}
 				</ul>
 				</li>
@@ -35,10 +37,16 @@ title: "NNNILabs"
 		{% endfor %}
 	{% endfor %}
 	<li id="rr"><b>recommended resources</b>
-	<ul>
+	<ul class="posts">
 		<div class="border"></div>
-		<li><a href="https://skaytacium.com">the guy who built this website's website</a></li>
+		{% for link in site.data.links %}
+			{% assign last = "" %}
+			{% if forloop.last == true %} {% assign last = "class=last" %} {% endif %}
+			<li {{ last }}><a href="{{ link.link }}" target="_blank">{{ link.text }}</a></li>
+		{% endfor %}
 	</ul>
 	</li>
 </ul>
 </div>
+
+<script src="{{ "/assets/js/index.js" | relative_url }}"></script>
