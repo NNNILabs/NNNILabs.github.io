@@ -40,7 +40,6 @@ title: "NNNILabs"
 	<ul class="posts">
 		<div class="border"></div>
 		{% for link in site.data.links %}
-			{% assign last = "" %}
 			{% if forloop.last == true %} {% assign last = "class=last" %} {% endif %}
 			<li {{ last }}><a href="{{ link.href }}" target="_blank">{{ link.text }}</a></li>
 		{% endfor %}
