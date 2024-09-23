@@ -42,7 +42,7 @@ title: "NNNILabs"
 		{% for link in site.data.links %}
 			{% assign last = "" %}
 			{% if forloop.last == true %} {% assign last = "class=last" %} {% endif %}
-			<li {{ last }}><a href="{{ link.link }}" target="_blank">{{ link.text }}</a></li>
+			<li {{ last }}><a href="{{ link.href }}" target="_blank">{{ link.text }}</a></li>
 		{% endfor %}
 	</ul>
 	</li>
