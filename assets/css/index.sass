@@ -16,13 +16,16 @@ sub
 // general
 ul
 	list-style: none
-	text-indent: .5em
 	margin-left: 0
 	padding-left: 0
 
-// indentation
+// sublist indentation
 ul ul
 	margin-left: 3.75em
+
+// text indentation
+li
+	padding-left: 0.5em
 
 // dashes
 li:before
@@ -64,5 +67,11 @@ li .border
 
 // recommended resources border
 #rr .border
-	height: calc(100% - 0.75em)
 	top: 3px
+	// increase border on phones
+	@media (width < 360px)
+		height: calc(100% - 54px)
+	@media (360px <= width < 590px)
+		height: calc(100% - 33px)
+	@media (width >= 590px)
+		height: calc(100% - 0.75em)

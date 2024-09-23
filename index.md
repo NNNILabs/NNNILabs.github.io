@@ -8,7 +8,7 @@ title: "NNNILabs"
 
 ## [YouTube](https://youtube.com/@NNNILabs) | [Twitter](https://twitter.com/NNNILabs) | [GitHub](https://github.com/NNNILabs)
 
-<span id="dropcap"></span>
+<span id="dropcap"></span> 
 
 <div id="categories">
 <ul>
