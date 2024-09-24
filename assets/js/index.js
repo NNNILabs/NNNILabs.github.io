@@ -7,6 +7,7 @@ const selectors = [
 
 selectors.forEach(s => {
 	const category = document.getElementById(s)
+	if (category == null) return
 	// only one connector per category
 	const connector = category.getElementsByClassName("connect")[0]
 	let height = 0
