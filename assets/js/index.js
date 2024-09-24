@@ -1,37 +1,23 @@
 const selectors = [
-	"#articles",
-	"#trash",
-	"#videos",
-	"#rr",
+	"articles",
+	"videos",
+	"trash",
+	"rr",
 ]
 
-// heightmap must be floored
-let heightmap = [22, 43, 64, 85, 106]
+selectors.forEach(s => {
+	const category = document.getElementById(s)
+	// only one connector per category
+	const connector = category.getElementsByClassName("connect")[0]
+	let height = 0
 
-heightmap = [
-	heightmap,
-	heightmap,
-	heightmap.slice(1),
-	heightmap.map(v => { return v - 2 })
-]
+	// only last post's height matters
+	if (s == "videos") {
+		// only one last element
+		const lastvideo = category.getElementsByClassName("last")[0]
+		height = lastvideo.getBoundingClientRect().height + lastvideo.nextElementSibling.getBoundingClientRect().height
+	} else
+		height = category.getElementsByClassName("last")[0].getBoundingClientRect().height
 
-let heights = []
-
-for (const post of document.getElementsByClassName("last"))
-	heights.push(parseFloat(post.getBoundingClientRect().height))
-
-let css = document.createElement("style")
-
-// h: height
-// i: selector
-heights.forEach((h, i) => {
-	// no. lines
-	let j = 0
-	while (h > heightmap[i][j]) j++
-
-	css.textContent += `${selectors[i]} .posts .border {
-	height: calc(100% - ${heightmap[i][j - 1]}px + 9.7px)
-} `
+	connector.style.height = `${connector.getBoundingClientRect().height - height}px`
 })
-
-document.head.appendChild(css)
