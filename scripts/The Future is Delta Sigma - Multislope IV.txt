@@ -177,12 +177,6 @@ Dan Sheingold, who edited the Analog Dialog magazine for 44 years, wrote a quick
 
 This PDF contains good arguments for both cases.
 
-I wouldn’t consider myself to be particularly religious, but I think I’ll stick to what my bible says and follow historical precedent instead of trying to apply mathematical notation to a schematic representation that is traditionally read left to right.
-
-On a more personal note, somehow, after hearing delta sigma all my life, sigma delta feels like a knock in the teeth.
-
-What next? Investigating Multislope IV for nearly two years made me catch the delta-sigma bug. Here’s a simple modulator I build around the Pro Pico using a simple RC filter integrator and multibit feedback. I plan to elaborate upon this idea, but before I set out on my own delta-sigma adventure, I have more pressing matters to deal with, which will equip me with certain skills for this journey…
-
 What’s next? We have now established that Multislope IV is the future of precision ADC design, but the topmost of the line, the 3458A, still uses a simple Multislope III style runup and multislope rundown. I bet Keysight, who inherited the 3458A design from Agilent, who inherited from HP, didn’t dare to touch a nearly-perfect existing design, and couldn’t be bothered investing in modernization.
 
 However, most modern bench DMMs from Keysight, who probably own the Agilent patent, seem to follow the Multislope IV recipe, like the 34461A and the high-end 34470A, both having the giveaway combination of fine and coarse ADCs.
