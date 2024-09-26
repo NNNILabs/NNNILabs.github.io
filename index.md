@@ -7,7 +7,7 @@ title: "NNNILabs"
 
 # NNNILabs
 
-## [YouTube](https://youtube.com/@NNNILabs) | [Twitter](https://twitter.com/NNNILabs) | [GitHub](https://github.com/NNNILabs)
+## [YouTube](https://youtube.com/@NNNILabs){:target="_blank"} | [Twitter](https://twitter.com/NNNILabs){:target="_blank"} | [GitHub](https://github.com/NNNILabs){:target="_blank"}
 
 <span id="dropcap"></span> 
 
