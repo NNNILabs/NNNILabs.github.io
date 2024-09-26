@@ -1,5 +1,6 @@
 ---
 category: trash
+layout: default
 ---
 
 # how to: pixel perfection w skaytacium
