@@ -19,8 +19,8 @@ selectors.forEach(s => {
 		height = lastvideo.getBoundingClientRect().height + lastvideo.nextElementSibling.getBoundingClientRect().height
 	} else
 		height = category.getElementsByClassName("last")[0].getBoundingClientRect().height
-
-	connector.style.height = `${connector.getBoundingClientRect().height - height}px`
+	// add 1 to make it not bug out
+	connector.style.height = `${connector.getBoundingClientRect().height - height + 1}px`
 })
 
 // don't show back button on index
