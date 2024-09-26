@@ -1,6 +1,7 @@
 ---
 category: trash
 layout: default
+title: pixel perfection
 ---
 
 # how to: pixel perfection w skaytacium
@@ -30,7 +31,7 @@ well, perfection.
 now if you've ever worked with css you know how "obvious" it is. everything is a box. boxes all the way down. kerning and it's kin don't matter in CSS, because it's ALL BOXES[^1].  
 so one can basically forget pixel-perfect vertical alignment in css, it ain't happening, ever.  
 since vertical alignment depends on subpixel calculations and rendering methods change depending on whether it's gecko or blink or webkit[^2] plus the user's font size and a billion other paremeters (like the DPI on the smart fridge you're hopefully not reading this article on), it's basically impossible.  
-and keep in mind, what i'm talking about here (verticle alignment) is aligning an absolutely positioned box to another absolutely position box, in which one has text.  
+and keep in mind, what i'm talking about here (vertical alignment) is aligning an absolutely positioned box to another absolutely position box, in which one has text.  
 *text is the great evil.*  
 
 ## How?
@@ -56,5 +57,5 @@ css is ass. hierarchy is hard.
 
 [source code](https://github.com/NNNILabs/NNNILabs.github.io)
 
-[^1]: https://developer.mozilla.org/en-US/docs/Learn/CSS/Building_blocks/The_box_model
-[^2]: https://www.joshwcomeau.com/css/pixel-perfection/
+[^1]: [Boxes all the way down](https://developer.mozilla.org/en-US/docs/Learn/CSS/Building_blocks/The_box_model)
+[^2]: [Pixel perfection](https://www.joshwcomeau.com/css/pixel-perfection/)
