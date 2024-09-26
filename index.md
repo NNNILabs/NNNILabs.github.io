@@ -9,7 +9,7 @@ title: "NNNILabs"
 
 ## [YouTube](https://youtube.com/@NNNILabs){:target="_blank"} | [Twitter](https://twitter.com/NNNILabs){:target="_blank"} | [GitHub](https://github.com/NNNILabs){:target="_blank"}
 
-<span id="dropcap"></span> 
+<span id="dropcap">A</span>fter spending 6 days straight editing what I consider my magnum opus (as of now), one of the first responses I got was: "Make a website!". Exasperation turned into inspiration, and over the coming weeks, I got [Skaytacium](https://skaytacium.com/me){:target="_blank"} to do my bidding and turn detailed instructions into _exactly_ the website I wanted - here it is! Welcome to the official NNNILabs website! I plan to use this website to mainly upload video scripts (for the more recent videos at least, for which I still have the scripts), 'show notes', plots, data and other things that don't fit into my videos despite my best efforts.
 
 <div id="categories">
 <ul>
