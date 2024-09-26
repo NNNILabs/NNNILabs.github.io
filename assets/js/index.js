@@ -23,4 +23,5 @@ selectors.forEach(s => {
 	connector.style.height = `${connector.getBoundingClientRect().height - height}px`
 })
 
+// don't show back button on index
 document.getElementById("back").remove()
