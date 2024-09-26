@@ -31,7 +31,7 @@ title: "NNNILabs"
 							<div class="border"></div>
 						</li>
 						{% if currentcategory == "videos" %}	
-						<ul><li><div class="border"></div><a href='{{ "/scripts/" | append: post.title | append: ".txt" | relative_url }}'>Script</a></li></ul>
+						<ul><li><div class="border"></div><a href='{{ "/scripts/" | append: post.title | append: ".txt" | relative_url }}' target="_blank">Script</a></li></ul>
 						{% endif %}
 					{% endfor %}
 					</ul>

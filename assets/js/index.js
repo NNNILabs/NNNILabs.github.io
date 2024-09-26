@@ -22,3 +22,5 @@ selectors.forEach(s => {
 
 	connector.style.height = `${connector.getBoundingClientRect().height - height}px`
 })
+
+document.getElementById("back").remove()
