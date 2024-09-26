@@ -1,5 +1,5 @@
 ---
-category: video
+category: videos
 layout: default
 ---
 
