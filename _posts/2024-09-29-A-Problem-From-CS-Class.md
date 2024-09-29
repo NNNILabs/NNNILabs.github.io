@@ -40,7 +40,17 @@ The result is a nice quadratic equation that can be solved easily using various 
 
 Basically, \\(a\\) is the coefficient of \\(x^{2}\\), \\(b\\) is the coefficient of \\(x\\), and \\(c\\) is the constant term; signs are of course taken into consideration, and missing coefficients are just \\(0\\).
 
-Using the coefficients, we have to find a pair of numbers that add up to \\(b\\) and multiply to give \\(a \cdot c\\). In this case, \\(-3\\) and \\(75\\) fit the bill - they add up to \\(72\\), which is \\(b\\), and multiply to give \\(-225\\), which is \\(a \cdot c\\). Perfect.
+Using the coefficients, we have to find a pair of numbers that add up to \\(b\\) and multiply to give \\(a \cdot c\\). This involves a little elbow grease, although the solution is usually quickly found:
+
+\\[ 1 \cdot -225 \text{or} -1 \cdot 225 \\]
+
+\\[ 3 \cdot -75 \text{or} -3 \cdot 75 \\]
+
+\\[ 5 \cdot -45 \text{or} -5 \cdot 45 \\]
+
+And so on. It helps to only consider clean factors.
+
+In this case, the \\(-3\\) and \\(75\\) pair fit the bill - they add up to \\(72\\), which is \\(b\\), and multiply to give \\(-225\\), which is \\(a \cdot c\\). Perfect.
 
 With that information, the quadratic can be rewritten and simplifed:
 
