@@ -28,11 +28,11 @@ This knowledge lets us rewrite the problem statement as follows:
 
 It should now be a simple matter of solving for x step-by-step. But first:
 
-\\[ 14 = 9 \cdot (1 \cdot x^{0} + 8 \cdot x^{-1} + 5 \cdot x^{-2}) \\]
+\\[ 14 = 9 \cdot (1 \cdot x^{0} + 8 \cdot x^{-1} + 5 \cdot x^{-2}) \hspace{1em} \| \cdot 9 \\]
 
 \\[ \implies 14 = 9 \cdot x^{0} + 72 \cdot x^{-1} + 45 \cdot x^{-2} \\]
 
-\\[ \implies 14 \cdot x^{2}= 9 \cdot x^{2} + 72 \cdot x^{1} + 45 \\]
+\\[ \implies 14 \cdot x^{2}= 9 \cdot x^{2} + 72 \cdot x^{1} + 45 \hspace{1em} \| \cdot x^{2} \\]
 
 \\[ \implies -5x^{2} + 72x + 45 = 0 \\]
 
