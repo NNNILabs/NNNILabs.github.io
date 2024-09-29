@@ -1,6 +1,7 @@
 ---
 category: article
 layout: default
+title: A Problem from CS Class
 ---
 
 # A Problem from CS Class
@@ -33,7 +34,7 @@ It should now be a simple matter of solving for x step-by-step. But first:
 
 \\[ \implies 14 \cdot x^{2}= 9 \cdot x^{2} + 72 \cdot x^{1} + 45 \text{ } | -14 \cdot x^{2} \\]
 
-\\[ \implies -5 \cdot x^{2} + 72 \cdot x + 45 = 0 \\]
+\\[ \implies -5x^{2} + 72x + 45 = 0 \\]
 
 The result is a nice quadratic equation that can be solved easily using various means, my favourite of which is the 'abc' method. I remember learning it multiple times under different names over the years, but the *actual* concept never really stuck inside my head, I keep having to come up with it again and again, on the spot. The only name I do remember is once again from class 10: completing the square[^1].
 
@@ -43,7 +44,7 @@ Using the coefficients, have to find a pair of numbers that add up to \\(b\\) an
 
 With that information, the quadratic can be rewritten and simplifed as follows:
 
-\\[ -5 \cdot x^{2} + 75 \cdot x - 3 \cdot x + 45 = 0 \\]
+\\[ -5x^{2} + 75x - 3x + 45 = 0 \\]
 
 \\[ \implies -5x(x-15) - 3(x-15) = 0 \\]
 
@@ -51,7 +52,7 @@ With that information, the quadratic can be rewritten and simplifed as follows:
 
 Being quadratic, the equation delivers two solutions:
 
-\\[ \mathbb{L} = {\frac{-3}{5}, 15} \\]
+\\[ \mathbb{L} = \{\frac{-3}{5}, 15\} \\]
 
 It should be trivial to check both cases (and yes, *do* check both cases, however unlikely one of the cases might be, problems like these always throw curveballs!) by substituting the base(s) and see which one correctly delivers decimal \\(\frac{14}{9}\\). Here, 15 is the right answer.
 
