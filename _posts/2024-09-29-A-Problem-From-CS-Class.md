@@ -42,11 +42,11 @@ Basically, \\(a\\) is the coefficient of \\(x^{2}\\), \\(b\\) is the coefficient
 
 Using the coefficients, we have to find a pair of numbers that add up to \\(b\\) and multiply to give \\(a \cdot c\\). This involves a little elbow grease, although the solution is usually quickly found:
 
-\\[ 1 \cdot -225 \text{or} -1 \cdot 225 \\]
+\\[ 1 \cdot -225 \ \text{or} \ -1 \cdot 225 \\]
 
-\\[ 3 \cdot -75 \text{or} -3 \cdot 75 \\]
+\\[ 3 \cdot -75 \ \text{or} \ -3 \cdot 75 \\]
 
-\\[ 5 \cdot -45 \text{or} -5 \cdot 45 \\]
+\\[ 5 \cdot -45 \ \text{or} \ -5 \cdot 45 \\]
 
 And so on. It helps to only consider clean factors.
 
