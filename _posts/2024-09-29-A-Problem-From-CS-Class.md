@@ -12,7 +12,7 @@ So when the following problem was written down on the whiteboard towards the end
 
 \\[ \frac{14}{9} = 1.85_{x} \\]
 
-In plain English - in what number system (with base \\(x\\)) is decimal \\(\frac{14}{9}\\) equal to 1.85? For example, binary 1111 is hexadecimal F and decimal 15.
+In plain English - in what number system (with base \\(x\\)) is decimal \\(\frac{14}{9}\\) equal to \\(1.85\\)? For example, binary 1111 is hexadecimal F and decimal 15.
 
 In class 1 (when I was 6), we learned about place and face value - and that has remained fresh in memory, luckily. Little did I know as a six-year-old, that I would one day *actually* get to use that knowledge to solve a problem that fascinated me.
 
