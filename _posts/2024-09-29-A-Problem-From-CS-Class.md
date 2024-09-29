@@ -64,11 +64,13 @@ Being quadratic, the equation delivers two solutions:
 
 \\[ \mathbb{L} = \left\\{\ \frac{-3}{5}, 15 \right\\}\ \\]
 
-It should be trivial to check both cases (and yes, *do* check both cases, however unlikely one of the cases might be, problems like these always throw curveballs!) by substituting the base(s) and seeing which one correctly delivers decimal \\(\frac{14}{9}\\). Here, 15 is the right answer.
+It should be trivial to check both cases (and yes, *do* check both cases, however unlikely one of the cases might seem, problems like these always throw curveballs!) by substituting the base(s) and seeing which one correctly delivers decimal \\(\frac{14}{9}\\). Here, \\(15\\) is the right answer.
 
 \\[ 1 \cdot 15^{0} + 8 \cdot 15^{-1} + 5 \cdot 15^{-2} = \frac{14}{9} \\]
 
 I was incredibly surprised that I managed to find the right answer in a relatively straightforward fashion. Although it was way past 11:00 PM, I was excited enough to type out a polite E-Mail to the professor, telling him about my solution and excitement in having found it out. Unfortunately, thanks to IT issues with the Uni's E-Mail servers, I was not able to share my excitement. I will have to wait an entire week to be able to present my solution in class! 
+
+Additionally, this problem also gave me a nice excuse to try rendering some math on this website.
 
 [^1]: [https://en.wikipedia.org/wiki/Completing_the_square](https://en.wikipedia.org/wiki/Completing_the_square){:target="_blank"}
 
