@@ -60,6 +60,6 @@ It should be trivial to check both cases (and yes, *do* check both cases, howeve
 
 I was incredibly surprised that I managed to find the right answer in a relatively straightforward fashion. Although it was way past 11:00 PM, I was excited enough to type out a polite E-Mail to the professor, telling him about my solution and excitement in having found it out. Unfortunately, thanks to IT issues with the Uni's E-Mail servers, I was not able to share my excitement. I will have to wait an entire week to be able to present my solution in class! 
 
-[^1]: [](https://en.wikipedia.org/wiki/Completing_the_square){:target="_blank"}
+[^1]: https://en.wikipedia.org/wiki/Completing_the_square
 
 
