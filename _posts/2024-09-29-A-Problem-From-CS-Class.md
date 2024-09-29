@@ -6,7 +6,7 @@ title: A Problem from CS Class
 
 # A Problem from CS Class
 
-<span id="dropcap">I</span>t's not every day that a problem, especially what could be considered a 'pure math' or 'pure theory' one, fascinates me. In fact, it's been at least a good five years since I was in such a situation. The last I remember was in class 10 (late 2017) - I came up with the concept of co-primes independently, and believed that they should be called *'relative primes'* instead, since that made a lot more sense to me.
+<span id="dropcap">I</span>t's not every day that a problem, especially what could be considered a 'pure math' or 'pure theory' one, fascinates me. In fact, it's been at least a good five years since I was in such a situation. The last I remember was in class 10 (late 2017) - I came up with the concept of co-primes independently, and believed that they should be called *relative primes* instead, since that made a lot more sense to me.
 
 So when the following problem was written down on the whiteboard towards the end of the Informatik (roughly translated, computer science) lecture, I was immediately interested.
 
