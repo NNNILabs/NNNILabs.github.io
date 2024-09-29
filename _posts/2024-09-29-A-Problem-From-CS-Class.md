@@ -52,7 +52,7 @@ With that information, the quadratic can be rewritten and simplifed as follows:
 
 Being quadratic, the equation delivers two solutions:
 
-\\[ \mathbb{L} = \left\{ \frac{-3}{5}, 15 \right\} \\]
+\\[ \mathbb{L} = \{\ \frac{-3}{5}, 15 \right\}\ \\]
 
 It should be trivial to check both cases (and yes, *do* check both cases, however unlikely one of the cases might be, problems like these always throw curveballs!) by substituting the base(s) and see which one correctly delivers decimal \\(\frac{14}{9}\\). Here, 15 is the right answer.
 
