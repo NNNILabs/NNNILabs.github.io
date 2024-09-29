@@ -12,7 +12,7 @@ So when the following problem was written down on the whiteboard towards the end
 
 \\[ \frac{14}{9} = 1.85_{x} \\]
 
-In plain English - In what number system (with base \\(x\\)) is decimal \\(\frac{14}{9}\\) equal to 1.85? For example, binary 1111 is hexadecimal F and decimal 15.
+In plain English - in what number system (with base \\(x\\)) is decimal \\(\frac{14}{9}\\) equal to 1.85? For example, binary 1111 is hexadecimal F and decimal 15.
 
 In class 1 (when I was 6), we learned about place and face value - and that has remained fresh in memory, luckily. Little did I know as a six-year-old, that I would one day *actually* get to use that knowledge to solve a problem that fascinated me.
 
@@ -42,7 +42,7 @@ Basically, \\(a\\) is the coefficient of \\(x^{2}\\), \\(b\\) is the coefficient
 
 Using the coefficients, we have to find a pair of numbers that add up to \\(b\\) and multiply to give \\(a \cdot c\\). In this case, \\(-3\\) and \\(75\\) fit the bill - they add up to \\(72\\), which is \\(b\\), and multiply to give \\(-225\\), which is \\(a \cdot c\\). Perfect.
 
-With that information, the quadratic can be rewritten and simplifed as follows:
+With that information, the quadratic can be rewritten and simplifed:
 
 \\[ -5x^{2} + 75x - 3x + 45 = 0 \\]
 
@@ -54,7 +54,7 @@ Being quadratic, the equation delivers two solutions:
 
 \\[ \mathbb{L} = \left\\{\ \frac{-3}{5}, 15 \right\\}\ \\]
 
-It should be trivial to check both cases (and yes, *do* check both cases, however unlikely one of the cases might be, problems like these always throw curveballs!) by substituting the base(s) and see which one correctly delivers decimal \\(\frac{14}{9}\\). Here, 15 is the right answer.
+It should be trivial to check both cases (and yes, *do* check both cases, however unlikely one of the cases might be, problems like these always throw curveballs!) by substituting the base(s) and seeing which one correctly delivers decimal \\(\frac{14}{9}\\). Here, 15 is the right answer.
 
 \\[ 1 \cdot 15^{0} + 8 \cdot 15^{-1} + 5 \cdot 15^{-2} = \frac{14}{9} \\]
 
