@@ -20,7 +20,7 @@ What a base \\(x\\) number system essentially means is the following:
 
 \\[ ab.cd = a \cdot x^{1} + b \cdot x^{0} + c \cdot x^{-1} + d \cdot x^{-2} \\]
 
-That is, a number like \\(ab.dc\\) is essentially the sum of the digits multiplied by the respective power of the base. The powers are positive integers that start at zero and go up by one to to the left for the digits before the decimal point, and start at -1 and go down by one to the right after the decimal point.
+That is, a number like \\(ab.cd\\) is essentially the sum of the digits multiplied by the respective power of the base. The powers are positive integers that start at zero and go up by one to to the left for the digits before the decimal point, and start at -1 and go down by one to the right after the decimal point.
 
 This knowledge lets us rewrite the problem statement as follows:
 
@@ -28,19 +28,23 @@ This knowledge lets us rewrite the problem statement as follows:
 
 It should now be a simple matter of solving for x step-by-step. But first:
 
-\\[ 14 = 9 \cdot (1 \cdot x^{0} + 8 \cdot x^{-1} + 5 \cdot x^{-2}) \text{ } | \cdot 9 \\]
+\\[ 
 
-\\[ \implies 14 = 9 \cdot x^{0} + 72 \cdot x^{-1} + 45 \cdot x^{-2} \\]
+14 = 9 \cdot (1 \cdot x^{0} + 8 \cdot x^{-1} + 5 \cdot x^{-2}) \text{ } | \cdot 9
 
-\\[ \implies 14 \cdot x^{2}= 9 \cdot x^{2} + 72 \cdot x^{1} + 45 \text{ } | -14 \cdot x^{2} \\]
+\implies 14 = 9 \cdot x^{0} + 72 \cdot x^{-1} + 45 \cdot x^{-2}
 
-\\[ \implies -5x^{2} + 72x + 45 = 0 \\]
+\implies 14 \cdot x^{2}= 9 \cdot x^{2} + 72 \cdot x^{1} + 45 \text{ } | -14 \cdot x^{2}
+
+\implies -5x^{2} + 72x + 45 = 0
+
+\\]
 
 The result is a nice quadratic equation that can be solved easily using various means, my favourite of which is the 'abc' method. I remember learning it multiple times under different names over the years, but the *actual* concept never really stuck inside my head, I keep having to come up with it again and again, on the spot. The only name I do remember is once again from class 10: completing the square[^1].
 
 Basically, \\(a\\) is the coefficient of \\(x^{2}\\), \\(b\\) is the coefficient of \\(x\\), and \\(c\\) is the constant term; signs are of course taken into consideration, and missing coefficients are just \\(0\\).
 
-Using the coefficients, have to find a pair of numbers that add up to \\(b\\) and multiply to give \\(a \cdot c\\). In this case, \\(-3\\) and \\(75\\) fit the bill - they add up to \\(72\\), which is \\(b\\), and multiply to give \\(-225\\), which is \\(a \cdot c\\). Perfect.
+Using the coefficients, we have to find a pair of numbers that add up to \\(b\\) and multiply to give \\(a \cdot c\\). In this case, \\(-3\\) and \\(75\\) fit the bill - they add up to \\(72\\), which is \\(b\\), and multiply to give \\(-225\\), which is \\(a \cdot c\\). Perfect.
 
 With that information, the quadratic can be rewritten and simplifed as follows:
 
