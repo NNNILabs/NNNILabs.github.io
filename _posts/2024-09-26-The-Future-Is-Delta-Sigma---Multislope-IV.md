@@ -8,7 +8,7 @@ title: The Future is Delta Sigma - Multislope IV
 
 <iframe src="https://www.youtube.com/embed/CrzEJI-8Miw?si=wUpASTnZilBcXD9q" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
 
-After reading footnote 61 in The Art of Electronics (3rd ed.), my curiosity about the converter topology described, was thoroughly aroused. I ended up spending a lot of time between November 2022 and August 2024 researching Multislope IV and the delta-sigma topology in general, from the point of view of integrating ADCs (think dual slope or multislope). This video is the result of nearly two years' worth of research and trying to understand delta-sigma in the context of Multislope IV, and also understanding how it was adapted to fit the needs of a bench multimeter.
+<span id="dropcap">A</span>fter reading footnote 61 in The Art of Electronics (3rd ed.), my curiosity about the converter topology described, was thoroughly aroused. I ended up spending a lot of time between November 2022 and August 2024 researching Multislope IV and the delta-sigma topology in general, from the point of view of integrating ADCs (think dual slope or multislope). This video is the result of nearly two years' worth of research and trying to understand delta-sigma in the context of Multislope IV, and also understanding how it was adapted to fit the needs of a bench multimeter.
 
 ## Addenda
 
