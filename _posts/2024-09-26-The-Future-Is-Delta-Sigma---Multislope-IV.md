@@ -12,7 +12,7 @@ title: The Future is Delta Sigma - Multislope IV
 
 ## Addenda
 
-1. Variable period PWM: Turns out this already has a formal mathematical description and name, described (along with a PWM example!) [in this article](https://www.embeddedrelated.com/showarticle/1620.php){:target="_blank"}[^1] by Jason Sachs.
+1. Turns out that variable period PWM already has a formal mathematical description and name, described (along with a PWM example!) [in this article](https://www.embeddedrelated.com/showarticle/1620.php){:target="_blank"}[^1] by Jason Sachs. One also comes across Farey sequences and Stern-Brocot trees (in my case, in the context of optimum decoding algorithms for first-order integrating encoders; in other words, multislope and first-order delta-sigma ADCs), whose Wikipedia pages present familiar-looking plots and figures.
 
 2. The plot from [20:11](https://youtu.be/CrzEJI-8Miw?t=1211){:target="_blank"}[^2] can also be found in a paper titled 'Better Accuracy in Temperature Calibration and Measurement through a New Type of Analog-to-Digital Converter' by Paul Bramley and John Pickering, which is publicly available [here](https://isotech.co.uk/wp-content/uploads/2020/09/microKcallabmagazine.pdf){:target="_blank"}[^3].
 
