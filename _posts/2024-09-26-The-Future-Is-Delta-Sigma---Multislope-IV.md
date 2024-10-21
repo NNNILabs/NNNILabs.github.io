@@ -22,11 +22,7 @@ title: The Future is Delta Sigma - Multislope IV
 
 5. A multibit modulator could be viewed as an inverting op-amp amplifier with an ADC/DAC combination connected between the op-amp output and the feedback resistor, as described in figure 2 from this interestingly-written [ADI Minitutorial](https://www.analog.com/media/en/training-seminars/tutorials/ctsd-precision-adc-mini-tutorial.pdf){:target="_blank"}[^5]. Adding a capacitor to turn the amplifier into an integrator does not change output behaviour - in order to maintain loop balance, the output of the op-amp still needs to be the input voltage times the ratio of the input and feedback resistor.
 
-\\[
-
-V_{out} = V_{in} \cdot \frac{R_{feedback}}{R_{input}}
-
-\\]
+\\[ V_{out} = V_{in} \cdot \frac{R_{feedback}}{R_{input}} \\]
 
 [^1]: https://www.embeddedrelated.com/showarticle/1620.php
 [^2]: https://youtu.be/CrzEJI-8Miw?t=1211
