@@ -32,3 +32,5 @@ title: The Future is Delta Sigma - Multislope IV
 [^4]: https://www.linkedin.com/posts/mike-engelhardt-a788a822_qspice-revolutionizes-power-analog-device-activity-7089610116697620480-9Ey4/
 [^5]: https://www.analog.com/media/en/training-seminars/tutorials/ctsd-precision-adc-mini-tutorial.pdf
 [^6]: https://ieeexplore.ieee.org/document/4097421
+[^7]: Effect of a PWM DAC on the Noise and Linearity of a Delta–Sigma ADC, J. R. Pickering, D. Georgakopoulos, J.M. Williams and P.S. Wright
+
