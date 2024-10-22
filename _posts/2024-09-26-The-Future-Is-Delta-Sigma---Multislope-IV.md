@@ -24,8 +24,11 @@ title: The Future is Delta Sigma - Multislope IV
 
 \\[ V_{out} = V_{in} \cdot \frac{R_{feedback}}{R_{input}} \\]
 
+6. The very normal performance of a single order modulator with a 20dB/decade rolloff can only be marginally offset by increasing the bit depth of the modulator (6dB reduction in noise for every bit). However, John Pickering describes an interesting method of 'interpolation' that could possibly be used to add an additional order to the loop[^6]. I have been playing around with what could be called a 'hybrid' modulator, but from QSPICE simulations, it seems like additional orders can only be achieved with an actual analog circuit. A loop with a single physical integrator can only achieve a single order response with direct feedback. With the hybrid modulator, I was trying to get more resolution out of "nowhere", that is, I can't generate higher order dither (in this context, I cannot make up information I have not extracted from the modulator), and expect a higher order response. Pickering works around this through 'interpolation' - he samples the integrator with a high(er) resolution quantizer, and over multiple modulation cycles, drives the lower resolution feedback DAC to achieve an average value that more or less equals the quantized value. Here's another way to put it - imagine the quantized integrator voltage being the input of a first-order delta-sigma DAC. Over a few feedback cycles, a lower resolution (say, 4-bit) bitstream is generated, whose average value approximates the 8-bit quantized input. I cannot confirm if a similar interpolation method was applied to Multislope IV, but if it was, that could once again explain the 8-bit coarse ADC and the 6-bit PWM DAC.
+
 [^1]: https://www.embeddedrelated.com/showarticle/1620.php
 [^2]: https://youtu.be/CrzEJI-8Miw?t=1211
 [^3]: https://isotech.co.uk/wp-content/uploads/2020/09/microKcallabmagazine.pdf
 [^4]: https://www.linkedin.com/posts/mike-engelhardt-a788a822_qspice-revolutionizes-power-analog-device-activity-7089610116697620480-9Ey4/
 [^5]: https://www.analog.com/media/en/training-seminars/tutorials/ctsd-precision-adc-mini-tutorial.pdf
+[^6]: https://ieeexplore.ieee.org/document/4097421
