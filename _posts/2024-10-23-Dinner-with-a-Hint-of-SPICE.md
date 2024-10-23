@@ -8,7 +8,7 @@ title: Dinner with a Hint of SPICE
 
 ## The pre-SPICE Era
 
-<span id="dropcap">I</span> was a strong proponent of the [Falstad](https://falstad.com/circuit/circuitjs.html){:target="_blank"}[^1] circuit simulator for the longest time. No downloads, simple UI, 'real-time' simulation and tweaking of component values, no need to remember cryptic commands, the ability to save the simulation as a text file (which can be re-opened on the website), effortless mixed-signal design with basic logic blocks (including custom logic), poweful analog blocks like voltage/current controlled voltage/current sources... what's not to like?
+<span id="dropcap">I</span> was a strong proponent of the Falstad circuit simulator for the longest time. No downloads, simple UI, 'real-time' simulation and tweaking of component values, no need to remember cryptic commands, the ability to save the simulation as a text file (which can be re-opened on the website), effortless mixed-signal design with basic logic blocks (including custom logic), poweful analog blocks like voltage/current controlled voltage/current sources... [what's not to like](https://falstad.com/circuit/circuitjs.html){:target="_blank"}[^1]?
 
 Even now, Falstad is my first choice to simulate a circuit idea. I don't have to think too hard about what I'm doing (which, thinking about it, might not be a very good thing after all), it is a simple matter of a few keystrokes and mouse clicks to draft a schematic, and absolutely no effort is needed to run it, the circuit is running as you draw. Numerically, the results are good enough to be on the level of a simple back-of-the-envelope calculation.
 
