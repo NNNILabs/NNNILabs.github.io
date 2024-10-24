@@ -43,7 +43,7 @@ It was only very recently that I had the sudden flash of inspiration to use QSPI
 ### QSPICE quirks
 
 1. Inputs to a C++ module must always have a lower index in the `data[index].type` union than outputs, otherwise the module outputs 0.
-2. The output impedance of a C++ module cannot be set to exactly zero[^11]. It does, fortunately, accept the scientific format as an input. To set it to a low(er) value, right click on the module, select 'add parameter', and type in ROUT = 1E-10.
+2. The output impedance of a C++ module cannot be set to exactly zero[^11]. It does, fortunately, accept the scientific format as an input. To set it to a low(er) value, right click on the module, select 'Add New Attribute', and type in `ROUT = 1E-10`.
 
 [^1]: https://falstad.com/circuit/circuitjs.html
 [^2]: https://ez.analog.com/design-tools-and-calculators/ltspice/
