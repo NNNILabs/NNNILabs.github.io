@@ -9,7 +9,7 @@ For anyone interested in working with electromagnetic accelerators of some kind,
 
 This is where capacitor chargers come in. They take said low voltage source, and step it up to a voltage suitable to completely charge large capacitors.
 
-My first forays into capacitor charging comes from a curious era of crude experimentation involving bug zappers. They came with various shapes and sizes of transformers, usually wired in a blocking oscillator circuit with a feedback winding and a couple of passives. Although capable of generating high voltages, up to 600Vac and upwards of a kilovolt after the (usually) three-stage voltage multiplier, they were woefully underpowered. The insectoid victims of such a weapon would tend to disagree, but not in time to escape being reduced to carbon and emanating smoke that smelt vaguely umami.
+My first forays into capacitor charging come from a curious era of crude experimentation involving bug zappers. They came with various shapes and sizes of transformers, usually wired in a blocking oscillator circuit with a feedback winding and a couple of passives. Although capable of generating high voltages, up to 600Vac and upwards of a kilovolt after the (usually) three-stage voltage multiplier, they were woefully underpowered. The insectoid victims of such a weapon would tend to disagree, but not in time to escape being reduced to carbon and emanating smoke that smelt vaguely umami.
 
 I came across material online that made use of disposable cameras, which contained a similar circuit, but a more suitable (by my judgement back then) transformers. My very first electronics book, and probably the one that got me seriously started with the hobby, 101 Gadgets for the Evil Genius, featured, as one of its projects, a 'taser' made from such a disposable camera. They were, apparently, not really a thing in India, which made me resort to weapons of bug destruction.
 
@@ -42,6 +42,21 @@ It was only today (08.11.2024) that I discovered the `.meas` command in LTspice 
 The measured time, `time`, is neatly printed in scientific format in the SPICE log, which can be opened using `CTRL + L`. Right-clicking on the table in the log allows you to plot the results against the stepped quantity.
 
 I was able to use this to determine the optimum inductance and turns ratio for an LT3750-based flyback capacitor charger.
+
+One idea I wanted to explore was the effect of various turns ratios on the charge time. This was primarily inspired by the rather disappointing charge time of my first LT3750 + DA2034 circuit. The problem stems from the large secondary inductance. The available peak currents are lower thanks to the large turns ratios, and the current ramp-down is also smaller, as the current slope is inversely proportional to inductance. The LT3751 datasheet has an entire paragraph explaining this.
+
+> The transformer ratio, N, should be selected based on
+the input and output voltages. Smaller N values equate
+to faster charge times and larger available output power.
+Note that drastically reducing N below the VOUT/VTRANS
+ratio will increase the flyback voltage on the drain of the
+NMOS and increase the current through the output diode.
+The ratio, N, should not be drastically increased either,
+due to the increased capacitance, N2 • CSEC, reflected to
+the primary. A good choice is to select N equal to VOUT/
+VTRANS.
+
+The 'ideal' case of having the turns ratio equal to \\( \frac{V_{out}}{V_{trans}} \\) would result in a steady-state duty cycle of 50%. Going back to Simon Bramble's formula for duty cycle, it can be noted that as the turns ratio gets lower, the duty cycle increases drastically. With a 1:1 turns ratio and a large \\( V_{out} \\) to \\( V_{trans} \\) ratio, the duty cycle is very high.
 
 [^]: [https://components101.com/ics/lt3750-current-mode-flyback-converter-ic](https://components101.com/ics/lt3750-current-mode-flyback-converter-ic){:target="_blank"}
 [^]: My 'job' was an interesting arrangement. I was freelancing for two websites, Components101 and Circuit Digest, both outlets for CircuitLoop Technologies LLP. My earnings averaged a couple thousand INR a month, roughly €15 to €20. Plenty for cheap locally-sourced components of dubious quality, but nowhere near enough to afford the €5 op-amps I consume on a weekly basis in DE. I count my blessings regularly.
