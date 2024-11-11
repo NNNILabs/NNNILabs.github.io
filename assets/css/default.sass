@@ -9,10 +9,18 @@ body
 	text-align: justify
 	line-height: 1.3
 
+// internal margin so that MathJAX works
 body > *
 	margin-left: 20%
 	margin-right: 20%
 
+// fix horrendous margin on smaller screens
+@media screen and (max-width: 768px)
+	body > *
+		margin-left: 10%
+		margin-right: 10%
+
+// don't try to center align twice
 p:has(mjx-container[display="true"])
 	margin-left: 0
 	margin-right: 0

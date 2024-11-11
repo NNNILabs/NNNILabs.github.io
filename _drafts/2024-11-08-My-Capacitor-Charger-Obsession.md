@@ -60,7 +60,7 @@ The 'ideal' case of having the turns ratio equal to \\( \frac{V_{out}}{V_{trans}
 
 [^]: [https://components101.com/ics/lt3750-current-mode-flyback-converter-ic](https://components101.com/ics/lt3750-current-mode-flyback-converter-ic){:target="_blank"}
 [^]: My 'job' was an interesting arrangement. I was freelancing for two websites, Components101 and Circuit Digest, both outlets for CircuitLoop Technologies LLP. My earnings averaged a couple thousand INR a month, roughly €15 to €20. Plenty for cheap locally-sourced components of dubious quality, but nowhere near enough to afford the €5 op-amps I consume on a weekly basis in DE. I count my blessings regularly.
-[^]:[https://www.youtube.com/watch?v=cX-y3eF2xCA](https://www.youtube.com/watch?v=cX-y3eF2xCA)(:target="_blank"}
+[^]:[https://www.youtube.com/watch?v=cX-y3eF2xCA](https://www.youtube.com/watch?v=cX-y3eF2xCA){:target="_blank"}
 [^]: I also seem to have come up with the concept of a 'short' video - a time-limited, superficial walkthrough.
 [^]:[https://4hv.org/e107_plugins/forum/forum_viewtopic.php?id=156318](https://4hv.org/e107_plugins/forum/forum_viewtopic.php?id=156318){:target="_blank"}
 [^]:[https://www.youtube.com/watch?v=ixZJm7WcIFA](https://www.youtube.com/watch?v=ixZJm7WcIFA){:target="_blank"}
