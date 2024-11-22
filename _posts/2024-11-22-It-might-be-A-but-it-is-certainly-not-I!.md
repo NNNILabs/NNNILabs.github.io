@@ -1,5 +1,5 @@
 ---
-catergory: trash
+category: trash
 layout: default
 title: It might be A but it is certainly not I!
 ---
