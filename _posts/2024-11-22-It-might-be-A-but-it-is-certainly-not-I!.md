@@ -104,5 +104,5 @@ As much as I hate having LLMs called even a tool (and certainly 'AI'!), given my
 [^4]: [https://en.wikipedia.org/wiki/OpenAI#Content_moderation_contract_with_Sama](https://en.wikipedia.org/wiki/OpenAI#Content_moderation_contract_with_Sama){:target="_blank"}
 [^5]: [https://www.youtube.com/shorts/KHEtJUlpqcg](https://www.youtube.com/shorts/KHEtJUlpqcg){:target="_blank"}
 [^6]: [https://www.youtube.com/watch?v=Crif5E67ar0](https://www.youtube.com/watch?v=Crif5E67ar0){:target="_blank"}
-[^7]: (https://en.wikipedia.org/wiki/Sam_Altman#Personal_life)[https://en.wikipedia.org/wiki/Sam_Altman#Personal_life]{:target="_blank"}
+[^7]: [https://en.wikipedia.org/wiki/Sam_Altman#Personal_life](https://en.wikipedia.org/wiki/Sam_Altman#Personal_life){:target="_blank"}
 
