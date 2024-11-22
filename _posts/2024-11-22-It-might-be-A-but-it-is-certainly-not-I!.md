@@ -8,7 +8,7 @@ title: It might be A but it is certainly not I!
 
 <span id="dropcap">C</span>ertainly one of the biggest debacles of the mid-2020s is the hype surrounding what is aggressively being marketed and pushed as AI.[^1]
 
-There are two facts that must immediately be made clear. Yes, this is a hit piece *aginst* AI. I do not like the way it is being marketed. Yes, I have used ChatGPT to perform various useful technical tasks, because it can help me with certain problems. The reason this write-up finds itself in the 'trash' category is because it is mostly an emotional rant. I am only aiming for a superficial level of technical correctness, not absolute theoretical or mathematical precision. The latter can be left to an LLM, but as a human, I'd rather express emotions than parrot pure theory.
+There are two facts that must immediately be made clear. Yes, this is a hit piece *against* AI. I do not like the way it is being marketed. Yes, I have used ChatGPT to perform various useful technical tasks, because it can help me with certain problems. The reason this write-up finds itself in the 'trash' category is because it is mostly an emotional rant. I am only aiming for a superficial level of technical correctness, not absolute theoretical or mathematical precision. The latter can be left to an LLM, but as a human, I'd rather express emotions than parrot pure theory.
 
 ## Before The Boom
 
