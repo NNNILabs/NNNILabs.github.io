@@ -98,11 +98,11 @@ Overall, I must have spent more time agonizing about the ethical dilemma of usin
 
 As much as I hate having LLMs called even a tool (and certainly 'AI'!), given my personal experiences with it, I am forced to agree. It is a tool, whose utility is decided by the end user. A useless tool, like a rubber spanner, or perhaps something more interesting, like a Swiss army knife - a true jack-of-all-trades, something that can get you out of a pinch but has not put traditional screwdriver, corkscrew, pocket knife, toothpick or tweezer manufacturers out of business. I hate AI. I hate how it 'generates' art, and I hate how that art is being used to spite actual, talented human beings. I hate the fact that it supports exploitative capitalism. I hate that it has the potential to kill creative jobs, ironically based off of previous creative people's work, scraped without consent and digested by a computer algorithm. Looking around me, it looks like 'AI', at least in the form of exploitative LLMs will stick around for a while. God, I wish I didn't have to live through this period.
 
-[^1]: (https://en.wikipedia.org/wiki/AI_boom)[https://en.wikipedia.org/wiki/AI_boom]{:target="_blank"}
-[^2]: (https://www.booklooker.de/B%C3%BCcher/Alle-Roboter-Geschichten/id/A02s5QfY01ZZH)[https://www.booklooker.de/B%C3%BCcher/Alle-Roboter-Geschichten/id/A02s5QfY01ZZH]{:target="_blank"}
-[^3]: (https://www.youtube.com/watch?v=Y65FRxE7uMc)[https://www.youtube.com/watch?v=Y65FRxE7uMc]{:target="_blank"}
-[^4]: (https://en.wikipedia.org/wiki/OpenAI#Content_moderation_contract_with_Sama)[https://en.wikipedia.org/wiki/OpenAI#Content_moderation_contract_with_Sama]{:target="_blank"}
-[^5]: (https://www.youtube.com/shorts/KHEtJUlpqcg)[https://www.youtube.com/shorts/KHEtJUlpqcg]{:target="_blank"}
-[^6]: (https://www.youtube.com/watch?v=Crif5E67ar0)[https://www.youtube.com/watch?v=Crif5E67ar0]{:target="_blank"}
+[^1]: [https://en.wikipedia.org/wiki/AI_boom](https://en.wikipedia.org/wiki/AI_boom){:target="_blank"}
+[^2]: [https://www.booklooker.de/B%C3%BCcher/Alle-Roboter-Geschichten/id/A02s5QfY01ZZH](https://www.booklooker.de/B%C3%BCcher/Alle-Roboter-Geschichten/id/A02s5QfY01ZZH){:target="_blank"}
+[^3]: [https://www.youtube.com/watch?v=Y65FRxE7uMc](https://www.youtube.com/watch?v=Y65FRxE7uMc){:target="_blank"}
+[^4]: [https://en.wikipedia.org/wiki/OpenAI#Content_moderation_contract_with_Sama](https://en.wikipedia.org/wiki/OpenAI#Content_moderation_contract_with_Sama){:target="_blank"}
+[^5]: [https://www.youtube.com/shorts/KHEtJUlpqcg](https://www.youtube.com/shorts/KHEtJUlpqcg){:target="_blank"}
+[^6]: [https://www.youtube.com/watch?v=Crif5E67ar0](https://www.youtube.com/watch?v=Crif5E67ar0){:target="_blank"}
 [^7]: (https://en.wikipedia.org/wiki/Sam_Altman#Personal_life)[https://en.wikipedia.org/wiki/Sam_Altman#Personal_life]{:target="_blank"}
 
