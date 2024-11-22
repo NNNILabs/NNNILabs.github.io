@@ -1,16 +1,36 @@
 ---
-catergory: trash
+category: trash
 layout: default
 title: It might be A but it is certainly not I!
 ---
 
 # It might be A but it is certainly not I!
 
-Certainly one of the biggest debacles of the mid-2020s is the hype surrounding what is aggressively being marketed and pushed as AI.
+<span id="dropcap">C</span>ertainly one of the biggest debacles of the mid-2020s is the hype surrounding what is aggressively being marketed and pushed as AI.[^1]
 
-There are two facts that must immediately be made clear. Yes, this is a hit piece *aginst* AI. I do not like the way it is being marketed. Yes, I have used ChatGPT to perform various useful technical tasks, because it can help me with certain problems.
+There are two facts that must immediately be made clear. Yes, this is a hit piece *against* AI. I do not like the way it is being marketed. Yes, I have used ChatGPT to perform various useful technical tasks, because it can help me with certain problems. The reason this write-up finds itself in the 'trash' category is because it is mostly an emotional rant. I am only aiming for a superficial level of technical correctness, not absolute theoretical or mathematical precision. The latter can be left to an LLM, but as a human, I'd rather express emotions than parrot pure theory.
 
-There's a few common talking points used by the part of the general populace who are more affine to, or simply and naively want to present a talking point for, AI.
+## Before The Boom
+
+My first encouter with computers that were capable of thinking just like humans is when I was around 11 or 12. I had been gifted two Isaac Asimov compilations a couple years previously, but I was just old enough to take them seriously and read them through. I didn't think too much about it, since (truly) intelligent robots had been a staple of science fiction, and I'd been a Star Wars fan since at least five years earlier.
+
+After moving to Germany, I discovered a (German) compilation of Asimov's robot short stories[^2] in a public bookshelf near the Christuskirche (Hannover, 30167), that I decided to pick up. It was only now, ten years later, that the full implications hit me. What also stood out to me was that U.S. Robots (and it's employees) were not billionaire VC bait. They actually cared about the products they made, they cared about proper marketing, and they cared about after-market support, to a large extent. They understood the moral and philosophical implications of their products.
+
+## The Boom And The Lies
+
+I do not get the same good 'vibes' from the people currently behind the 2024 AI boom - isconnected billionaire preppers who seem to be more concerned about pushing stock prices.
+
+Worst of all, it's not *actually* AI. AI implies a computer that can spontaneously generate thoughts and learn organically without needing a ton of training data. What *is* being pushed is actually an LLM, a text-generating computer algorithm. It cannot think, and is certainly *not* intelligent.
+
+An LLM is a statistical algorithm that generates the most probable next word or sentence based on the text input. The probabilities inside the LLM are 'trained' using actual text. And in the case of 2024 'AI', the training data came from the Internet, the entireity of which was scraped for essentially free. The algorithm builds upon *out* efforts and is only good *because* of it. The best description I've found of how an LLM works was a video from suckerpinch, a.k.a. Tom7[^3].
+
+The general concept of an LLM, or any 'AI' algorithm, can be applied not only to text, but also the generation of pictures, audio and video. Given enough training data, the algorithm 'knows' what the most likely next pixel, sample or frame is, and generates it.
+
+Cheap, fake-looking and soulless art has now been placed in the hands of everyone. While most of the world's population cannot care less, this capability has been extensively utilized by careless corporate marketing departments, and those with more nefarious or perverted intentions.[^4]
+
+## The Excuses
+
+As with any new technology, the general populace stratifies quickly like oil and water regarding stances for or against it. There's a few common talking points used by that part of the general populace which is more affine to, or simply and naively wants to present a talking point for, AI.
 
 1. But human artists learn from other artists and 'copy' their work too!
 
@@ -24,9 +44,9 @@ What is the internet for? A non-consensual farming ground for the creation of co
 
 3. But AI is so good! It will replace a lot of jobs!
 
-AI is only good because the content it scraped (which were created by people just like you and me, and some very smart ones) is good.
+AI is only good because the content it scraped (which were created by people just like you and me, and some very smart ones) is good. Once the training material runs out, or is cut off by copyright claims (with which I hope 'AI' corporations are bombarded), the LLM will stop producing new 'good' results. At that point, instead of spending a lot of money and energy training a computer algorithm, why not just let humans do their thing?
 
-I had the particular displeasure of coming across YouTube user '@firexgodx980' who was feverishly defending AI under a 3Blue1Brown short video[^].
+I had the particular displeasure of coming across YouTube user '@firexgodx980' who was feverishly defending AI under a 3Blue1Brown short video[^5].
 
 > That's a gross oversimplification. LLMs are also Turing complete, just like humans. For all we know, humans are "just" next word predictors too.
 
@@ -38,12 +58,13 @@ A human being might draw upon years of experience, without being limited by the 
 
 A fundamental marketing concept is to sell something as more than what it really is, and 'AI' is no different. That marketing has, unfortunately, proven to be extremely effective, extracting billions in funding from various sources. It is quite unfortunate that tech investors rarely understand what they are funding, and let themselves be talked into schemes that are unfeasible or unethical, with the promise of multiplying their investment. Claiming that a computer algorithm was invented that is capable of *thinking*, and maybe *outperforming* a human, is just such a scheme. An LLM is simply a probabilistic text generator. Nothing more, nothing less, despite what some people desperately want to *believe*.
 
-The basis of an LLM is training data, using which it's internal probability engine (a term I made up right now) can be fine tuned. The data, in this case, is apparently the entireity of the Internet. With no warning, with no permission, the entire Internet was suddenly scraped to train a large language model. This is a copyright grey area. No laws exist that can hold the LLM culpable for copyright violation, since it does not 'traditionally' copy content. However, years of painstaking work in all fields was used to train a next-word predictor for free, which can indeed, to a large degree of accuracy, predict the next word in any context. Completely non-consensual, and LLMs have been used for commerical purposes, i.e. earning money. Years of pure human *effort*, which cannot be objectively or legally quantified, has been used, with no consent, to train an algorithm that reduces the value of effort to nothing. This is not a technical, economical or moral argument, simply a philosophical one. It has been observed many times in the past, that it is usually technical or economic forces that unfortunately shape society, and not moral or philosophical ones.
+The basis of an LLM is training data, using which it's internal probability engine (a term I made up right now) can be fine tuned. The data, in this case, is apparently the entirety of the Internet. With no warning, with no permission, the entire Internet was suddenly scraped to train a large language model. This is a copyright grey area. No laws exist that can hold the LLM culpable for copyright violation, since it does not 'traditionally' copy content. However, years of painstaking work in all fields was used to train a next-word predictor for free, which can indeed, to a large degree of accuracy, predict the next word in any context. Completely non-consensual, and LLMs have been used for commerical purposes, i.e. earning money. Years of pure human *effort*, which cannot be objectively or legally quantified, has been used, with no consent, to train an algorithm that reduces the value of effort to nothing. This is not a technical or economical argument, simply a philosophical one. It has been observed many times in the past, that it is usually technical or economic forces that unfortunately shape society, and not philosophical ones.
 
-> I'd rather laugh with the sinners than cry with the saints
-> The sinners are much more fun[^]
+> "I'd rather laugh with the sinners than cry with the saints, the sinners are much more fun[^6]"
 
-Sam Altman is a prepper. He wants to make sure him and everything that is *his* survives a possible human extinction event. He is the founder of a company that has created a product, which, in science fiction, has caused, or willed, a human extinction event. 1 + 1 = 2. He *does not care* about the 'rest' of us. We are a market to be exploited.
+Sam Altman is a prepper[^7]. He wants to make sure him and everything that is *his* survives a possible human extinction event. He is the founder of a company that has created a product, which, in science fiction, has caused, or willed, a human extinction event. 1 + 1 = 2. He *does not care* about the 'rest' of us. We are a market to be exploited.
+
+## AI And Me
 
 There are two clear examples, from my personal use of LLMs, that clearly indicate that the algorithm has no 'thinking' capability of it's own. 
 
@@ -59,7 +80,7 @@ After a rather long phone call with my mother about my future plans after finish
 
 The quizzes had a deadline, so I was under pressure to finish them quickly. The questions themselves, the way I saw it after a tiring phone call, were rather frustrating and dug into the theoretical depths of the language. Variable names were non-descriptive, but exactly as one would expect in a classroom setting - a, b, x, y and the likes. Functions were arbitrary and needed a thorough going-through before I could arrive at the expected answer. I was not in a mental state to do that.
 
-I had been discussing the feelings I had been having lately. My high school years are still sharp in memory, and I'd already spent two years in Germany, dropped out once after a year, and started the degree once again. It felt like I'd been a student forever. It's not like I cannot do an EE job, and it's not like *Everything* taught in a university setting is useful in real life. I'd been programming rather complex microcontroller-based projects in C for a few years now. In fact, I'd brought that up during the introduction round in the first lecture. "You must know a lot, then!" said the Professor. "Maybe, but that does not mean I can skip classes, it always helps to brush up on the basics." I replied. While true, in my present state of frustration, it seemed like nothing more than an empty platitude.
+I had been discussing the feelings I had been having lately. My high school years are still sharp in memory, and I'd already spent two years in Germany, dropped out once after a year, and started the degree once again. It felt like I'd been a student forever. It's not like I cannot do an EE job, and it's not like *everything* taught in a university setting is useful in real life. I'd been programming rather complex microcontroller-based projects in C for a few years now. In fact, I'd brought that up during the introduction round in the first lecture. "You must know a lot, then!" said the Professor. "Maybe, but that does not mean I can skip classes, it always helps to brush up on the basics." I replied. While true, in my present state of frustration, it seemed like nothing more than an empty platitude.
 
 Faced with the bleak prospect of years of academic drudgery and maybe not being able to finish, and getting kicked out of the degree and by extension the country, I turned to ChatGPT.
 
@@ -77,6 +98,16 @@ Overall, I must have spent more time agonizing about the ethical dilemma of usin
 
 As much as I hate having LLMs called even a tool (and certainly 'AI'!), given my personal experiences with it, I am forced to agree. It is a tool, whose utility is decided by the end user. A useless tool, like a rubber spanner, or perhaps something more interesting, like a Swiss army knife - a true jack-of-all-trades, something that can get you out of a pinch but has not put traditional screwdriver, corkscrew, pocket knife, toothpick or tweezer manufacturers out of business. I hate AI. I hate how it 'generates' art, and I hate how that art is being used to spite actual, talented human beings. I hate the fact that it supports exploitative capitalism. I hate that it has the potential to kill creative jobs, ironically based off of previous creative people's work, scraped without consent and digested by a computer algorithm. Looking around me, it looks like 'AI', at least in the form of exploitative LLMs will stick around for a while. God, I wish I didn't have to live through this period.
 
-[^]: (https://www.youtube.com/shorts/KHEtJUlpqcg)[https://www.youtube.com/shorts/KHEtJUlpqcg]{:target="_blank"}
-[^]: (https://www.youtube.com/watch?v=Crif5E67ar0)[https://www.youtube.com/watch?v=Crif5E67ar0]{:target="_blank"}
+## What's Next?
+
+If there ever comes a day that AI replaces all humans at their jobs, what will be left to do? There will be no value and no reward for effort, even if not monetary. What *will* we do, and what *could* we do? If an AI provides for us, there is only one way this can end - and exactly that society was modelled using rats in a famous experiment[^8]. That will be the ultimate decay of the world we know.
+
+[^1]: [https://en.wikipedia.org/wiki/AI_boom](https://en.wikipedia.org/wiki/AI_boom){:target="_blank"}
+[^2]: [https://www.booklooker.de/B%C3%BCcher/Alle-Roboter-Geschichten/id/A02s5QfY01ZZH](https://www.booklooker.de/B%C3%BCcher/Alle-Roboter-Geschichten/id/A02s5QfY01ZZH){:target="_blank"}
+[^3]: [https://www.youtube.com/watch?v=Y65FRxE7uMc](https://www.youtube.com/watch?v=Y65FRxE7uMc){:target="_blank"}
+[^4]: [https://en.wikipedia.org/wiki/OpenAI#Content_moderation_contract_with_Sama](https://en.wikipedia.org/wiki/OpenAI#Content_moderation_contract_with_Sama){:target="_blank"}
+[^5]: [https://www.youtube.com/shorts/KHEtJUlpqcg](https://www.youtube.com/shorts/KHEtJUlpqcg){:target="_blank"}
+[^6]: [https://www.youtube.com/watch?v=Crif5E67ar0](https://www.youtube.com/watch?v=Crif5E67ar0){:target="_blank"}
+[^7]: [https://en.wikipedia.org/wiki/Sam_Altman#Personal_life](https://en.wikipedia.org/wiki/Sam_Altman#Personal_life){:target="_blank"}
+[^8]: [https://en.wikipedia.org/wiki/Behavioral_sink](https://en.wikipedia.org/wiki/Behavioral_sink){:target="_blank"}
 
