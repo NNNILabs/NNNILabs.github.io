@@ -98,6 +98,10 @@ Overall, I must have spent more time agonizing about the ethical dilemma of usin
 
 As much as I hate having LLMs called even a tool (and certainly 'AI'!), given my personal experiences with it, I am forced to agree. It is a tool, whose utility is decided by the end user. A useless tool, like a rubber spanner, or perhaps something more interesting, like a Swiss army knife - a true jack-of-all-trades, something that can get you out of a pinch but has not put traditional screwdriver, corkscrew, pocket knife, toothpick or tweezer manufacturers out of business. I hate AI. I hate how it 'generates' art, and I hate how that art is being used to spite actual, talented human beings. I hate the fact that it supports exploitative capitalism. I hate that it has the potential to kill creative jobs, ironically based off of previous creative people's work, scraped without consent and digested by a computer algorithm. Looking around me, it looks like 'AI', at least in the form of exploitative LLMs will stick around for a while. God, I wish I didn't have to live through this period.
 
+## What's Next?
+
+If there ever comes a day that AI replaces all humans at their jobs, what will be left to do? There will be no value and no reward for effort, even if not monetary. What *will* we do, and what *could* we do? If an AI provides for us, there is only one way this can end - and exactly that society was modelled using rats in a famous experiment[^8]. That will be the ultimate decay of the world we know.
+
 [^1]: [https://en.wikipedia.org/wiki/AI_boom](https://en.wikipedia.org/wiki/AI_boom){:target="_blank"}
 [^2]: [https://www.booklooker.de/B%C3%BCcher/Alle-Roboter-Geschichten/id/A02s5QfY01ZZH](https://www.booklooker.de/B%C3%BCcher/Alle-Roboter-Geschichten/id/A02s5QfY01ZZH){:target="_blank"}
 [^3]: [https://www.youtube.com/watch?v=Y65FRxE7uMc](https://www.youtube.com/watch?v=Y65FRxE7uMc){:target="_blank"}
@@ -105,4 +109,5 @@ As much as I hate having LLMs called even a tool (and certainly 'AI'!), given my
 [^5]: [https://www.youtube.com/shorts/KHEtJUlpqcg](https://www.youtube.com/shorts/KHEtJUlpqcg){:target="_blank"}
 [^6]: [https://www.youtube.com/watch?v=Crif5E67ar0](https://www.youtube.com/watch?v=Crif5E67ar0){:target="_blank"}
 [^7]: [https://en.wikipedia.org/wiki/Sam_Altman#Personal_life](https://en.wikipedia.org/wiki/Sam_Altman#Personal_life){:target="_blank"}
+[^8]: [https://en.wikipedia.org/wiki/Behavioral_sink](https://en.wikipedia.org/wiki/Behavioral_sink){:target="_blank"}
 
