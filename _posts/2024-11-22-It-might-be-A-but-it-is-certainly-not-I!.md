@@ -44,7 +44,7 @@ What is the internet for? A non-consensual farming ground for the creation of co
 
 3. But AI is so good! It will replace a lot of jobs!
 
-AI is only good because the content it scraped (which were created by people just like you and me, and some very smart ones) is good. Once the training material runs out, or is cut off by copyright claims (with which I hope 'AI' corporations are bombarded with), the LLM will stop producing new 'good' results. At that point, instead of spending a lot of money and energy training a computer algorithm, why not just let humans do their thing?
+AI is only good because the content it scraped (which were created by people just like you and me, and some very smart ones) is good. Once the training material runs out, or is cut off by copyright claims (with which I hope 'AI' corporations are bombarded), the LLM will stop producing new 'good' results. At that point, instead of spending a lot of money and energy training a computer algorithm, why not just let humans do their thing?
 
 I had the particular displeasure of coming across YouTube user '@firexgodx980' who was feverishly defending AI under a 3Blue1Brown short video[^5].
 
