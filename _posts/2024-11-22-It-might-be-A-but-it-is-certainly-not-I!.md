@@ -18,7 +18,7 @@ After moving to Germany, I discovered a (German) compilation of Asimov's robot s
 
 ## The Boom And The Lies
 
-I do not get the same good 'vibes' from the people currently behind the 2024 AI boom - isconnected billionaire preppers who seem to be more concerned about pushing stock prices.
+I do not get the same good 'vibes' from the people currently behind the 2024 AI boom - disconnected billionaire preppers who seem to be more concerned about pushing stock prices.
 
 Worst of all, it's not *actually* AI. AI implies a computer that can spontaneously generate thoughts and learn organically without needing a ton of training data. What *is* being pushed is actually an LLM, a text-generating computer algorithm. It cannot think, and is certainly *not* intelligent.
 
