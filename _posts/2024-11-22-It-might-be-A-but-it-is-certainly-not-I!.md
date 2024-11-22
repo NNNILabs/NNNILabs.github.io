@@ -6,11 +6,11 @@ title: It might be A but it is certainly not I!
 
 # It might be A but it is certainly not I!
 
-## Before The Boom
-
 <span id="dropcap">C</span>ertainly one of the biggest debacles of the mid-2020s is the hype surrounding what is aggressively being marketed and pushed as AI.[^1]
 
 There are two facts that must immediately be made clear. Yes, this is a hit piece *aginst* AI. I do not like the way it is being marketed. Yes, I have used ChatGPT to perform various useful technical tasks, because it can help me with certain problems. The reason this write-up finds itself in the 'trash' category is because it is mostly an emotional rant. I am only aiming for a superficial level of technical correctness, not absolute theoretical or mathematical precision. The latter can be left to an LLM, but as a human, I'd rather express emotions than parrot pure theory.
+
+## Before The Boom
 
 My first encouter with computers that were capable of thinking just like humans is when I was around 11 or 12. I had been gifted two Isaac Asimov compilations a couple years previously, but I was just old enough to take them seriously and read them through. I didn't think too much about it, since (truly) intelligent robots had been a staple of science fiction, and I'd been a Star Wars fan since at least five years earlier.
 
