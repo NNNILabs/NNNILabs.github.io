@@ -22,7 +22,7 @@ I do not get the same good 'vibes' from the people currently behind the 2024 AI 
 
 Worst of all, it's not *actually* AI. AI implies a computer that can spontaneously generate thoughts and learn organically without needing a ton of training data. What *is* being pushed is actually an LLM, a text-generating computer algorithm. It cannot think, and is certainly *not* intelligent.
 
-An LLM is a statistical algorithm that generates the most probable next word or sentence based on the text input. The probabilities inside the LLM are 'trained' using actual text. And in the case of 2024 'AI', the training data came from the Internet, the entireity of which was scraped for essentially free. The algorithm builds upon *out* efforts and is only good *because* of it. The best description I've found of how an LLM works was a video from suckerpinch, a.k.a. Tom7[^3].
+An LLM is a statistical algorithm that generates the most probable next word or sentence based on the text input. The probabilities inside the LLM are 'trained' using actual text. And in the case of 2024 'AI', the training data came from the Internet, the entireity of which was scraped for essentially free. The algorithm builds upon *our* efforts and is only good *because* of it. The best description I've found of how an LLM works was a video from suckerpinch, a.k.a. Tom7[^3].
 
 The general concept of an LLM, or any 'AI' algorithm, can be applied not only to text, but also the generation of pictures, audio and video. Given enough training data, the algorithm 'knows' what the most likely next pixel, sample or frame is, and generates it.
 
