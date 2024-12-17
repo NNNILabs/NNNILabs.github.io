@@ -34,7 +34,7 @@ title: The Future is Delta Sigma - Multislope IV
 	
 	Here, the trigger is set to a synchronization PWM signal that is locked to the phase-accurate PWM. Now, both the rising and falling edges vary equally and correctly around the center of the PWM period.
 	
-	A rather insidious advantage to phase-accurate PWM is that the integrator voltage, to a large extent, self-centers around the coarse ADC's midpoint. Going through the footage gathered of the integrator's operation, the integrator crosses 2V around the center of the high state of the PWM period. Calibration of the average integrator voltage could be as easy as varying the point at which the integrator is digitized, centered around the period's midpoint.
+	A rather insidious advantage to phase-accurate PWM is that the integrator voltage, to a large extent, self-centers around the coarse ADC's midpoint. Going through the footage gathered of the integrator's operation, the integrator crosses 2V around the center of the high state of the PWM period. Calibration of the average integrator voltage could be as easy as varying the point at which the integrator is digitized, centered around the period's midpoint. Furthermore, the feedforward function is now a simple linear equation with no constant term, unlike the quadratic equation I had to derive as the feedforward function with simple PWM.
 
 [^1]: [https://www.embeddedrelated.com/showarticle/1620.php](https://www.embeddedrelated.com/showarticle/1620.php)){:target="_blank"}
 [^2]: [https://youtu.be/CrzEJI-8Miw?t=1211](https://youtu.be/CrzEJI-8Miw?t=1211)){:target="_blank"}
