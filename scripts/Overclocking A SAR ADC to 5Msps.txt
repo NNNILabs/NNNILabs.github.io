@@ -1,0 +1,141 @@
+﻿From 0 to 5Msps - A Complete sub-Project Walkthrough
+
+2024 was supposed to be the year of delta-sigma. However, that year has come and gone with no news or updates about my discrete delta-sigma ADC. Working on such a complex project can take years - don’t ask me how I know. The multislope ADC is already in its third year and fourth revision, yet shows no signs of being able to break the 1ppm barrier.
+
+Delta-sigma has much greater scope and complexity. The world’s finest modulators have reliably demonstrated linearity in the 10s of parts per billion, and I cannot rest till I achieve similar results. It is a fine dance between the precision analog modulator and a digital filter algorithm that can quickly extract a low-noise and extremely linear reading out of a highly noise-shaped bitstream.
+
+That bitstream comes from the multibit quantizer - in other words, an analog-to-digital converter, which digitizes the integrator voltage and converts it into a string of ones and zeroes. It has to be fast, low-noise and simple, the last of which is a measure to simplify an already messy circuit. For example, this entire section of the multislope ADC is dedicated to the care and feeding of the residue ADC - imagine if all this could be shrunk into one small breakout board.
+
+This video is intended to fully document the design, construction and testing of this deceptively simple sub-project.
+
+One of my earliest ideas was to use the AD4630 24-bit SAR ADC, which has incredible linearity, a true competitor to long-scale bench DMMs. Wrapping this amazing part in an integrating loop should surely result in an even better ADC, right? No, delta-sigma relies on the coarseness of the multibit quantizer to generate noise-shaped dither. At higher resolution, the integrator is digitized almost perfectly, which means the delta is zero, and there is nothing to sigma. No noise shaping for you.
+
+The next candidate is the AD4630… uh, 16, the 16-bit sibling of the AD4630… 24. While not as linear, two channels and 2 megasamples per second are highly desirable. What put me off is the large number of supporting components on an equally large and complex PCB.
+
+In times of doubt, parametric search is your best friend. I’d like to fill this important position with parts from a noble… I mean, a reputable manufacturer. And, of course, I’d like to not wait years for replenished stock.
+
+I set an arbitrary requirement of 5 megasamples per second. The feedback loop is not going to run so quickly, but at the same time, it wouldn’t help to sit around waiting for a complete conversion.
+
+LCSC presents an eye-wateringly expensive list of components I considered at various points in time. The AD7356 is perfectly sized, with two channels and an SPI interface that barely misses the 3.3V mark.
+
+Level shifters were not something I was very keen on, since all they do is take up board space. However, desperation almost forced me to pair up TI’s TXB0108 with the LTC2311, but I was thankfully released from having to do that after I discovered the latter’s one-sample latency.
+
+Next in line is the LTC2315. It checked all the boxes - 5 megasamples per second, a 3.3V-compatible SPI interface and a compact package. I was halfway through laying out the PCB when I decided to take a closer look at the datasheet - only to realize this part had a one-sample delay too.
+
+Several agonizing weeks later, I decided to relax my requirements and explore other options. That led me to the AD7276, a 3 megasample per second successive approximation ADC. In many ways, it is similar to the MCP3201 used in the multislope ADC. There are no internal registers to program or convoluted pinouts to deal with. The internal conversion logic is clocked directly through the serial interface, and the sample-and-hold is controlled using the chip select pin, giving the user complete control over ADC operation.
+
+Internally, the AD7276 is a capacitive SAR. There is no R-2R ladder inside. Instead, a series of binary-weighted capacitors perform the conversion directly. 
+
+Oh, what’s this? Looks like Falstad got a significant UI upgrade, no more remembering keyboard shortcuts.
+
+Anyways, at the start of the conversion cycle, all capacitors are connected to the input and track its voltage changes. When the chip select pin is pulled low, the ADC goes into hold mode - this switch is opened, which floats the capacitors, essentially disconnecting them from the input. This is an inherent sample-and-hold function, no need for a separate circuit, making this topology desirably simple. Then, the other end of the capacitors are connected to the reference voltage. To start the actual analog-to-digital  conversion, the capacitors, from largest to smallest, are switched to ground one by one, forming a capacitive divider that redistributes charge among the differently weighted capacitors at each stage. If the comparator reads high, the switch is left at the reference position, otherwise, it is connected to ground. The comparator output feeds the SDO pin directly, which is just the converted analog voltage, MSB-first. Smaller and smaller amounts of charge are redistributed and compared, right down to the LSB weighted capacitor. You could think of this like an extreme version of a bucket brigade, only that the buckets double in size down the line and everything happens millions of times per second. The duplicate LSB capacitor is just there to ensure that the binary ratios are correct and does not play a part in the actual conversion.
+
+In reality, these capacitors are so small that the actual capacitances are in the femtofarads. The Richi’s Lab[1]: website has not just ADCs, but also other cool die shots with good commentary, including Texas Instruments’ latest microcontroller, the REF80, which also happens to have a buried-zener reference peripheral.
+
+Also capacitive is the RP2040’s internal ADC, infamous for its terrible differential non-linearity, which has been improved in the RP2350’s ADC. Earlier this year[2], I was able to overclock it to 4.2 megasamples per second, which is eight times the rated sample rate, although at that speed, the conversions were not perfect. That inspired me to try overclocking the AD7276 to 5 megasamples per second. It is a simple matter of increasing the serial clock frequency and seeing if the ADC’s readings are still valid, and up to which speed.
+
+With the part selected and a goal in mind, it’s time to design a PCB. The schematic for the board is reasonably simple. The ADC itself, and since I didn’t want to repeat the same mistakes which you will hear about in the next multislope video, a series of decoupling capacitors - tantalum for bulk low-frequency smoothing, and two ceramic capacitors to handle high frequency currents.
+
+Since the ADC comes in a SOT-23 package, I had enough space to include an input buffer, which is a Texas Instruments OPA354. With its large gain-bandwidth product and fast slew rate, it should be able to handle the switched load it sees from the ADC. Forming the input filter is a 22Ω resistor and a C0G capacitor.
+
+To select the input filter’s R and C values, I turned to LTspice. Texas Instruments has a SPICE model for the OPA354 available, which is not compatible with LTspice’s opamp2, and since I don’t want to make changes to the library file, I’ll have to settle for this terrible automatically generated symbol. Op-amp datasheets usually specify a range of allowed capacitances on the output, along with appropriate resistor values. For the 470pF capacitor I selected, around 80Ω would be appropriate, but LTspice tells me that 10Ω works just fine, so I’ll go with that.
+
+The irony of spending hours aligning the copper polygons, traces and pads to the last 0.025mm on a 24-inch display, only to realize that it ultimately does not matter because the board is so small, is not lost on me. Luckily, Aisler, who sponsored these PCBs, has manufacturing tolerances that are much tighter, making this exercise not entirely pointless.
+
+These PCBs can go straight into the scrap bin, since I wanted to make one small but important change, which called for another revision. Thanks to Aisler’s quick delivery times, I didn’t have to wait for long.
+
+Instead of trying to hand-solder the board with mediocre results, a stencil and solder paste should make the job quick and easy, at least in theory.
+
+In practice, all I have is this old and dried out solder paste, which I will try to restore using flux gel. Now that the grey matter has been primed with flux, it’s time to prime the other grey matter with flux fumes… but not before populating the PCBs.
+
+The restoration didn’t do great things for spreadability, resulting in a less than optimal coating on the pads, not to mention the fact that I didn’t do a good job aligning the stencil.
+
+I swear, this is not subliminal Aisler marketing… I was, uh… trying to prevent the golden pads from interfering with my phone camera’s white balance… moving on.
+
+First up, the C0G ADC input filter capacitor. I’m not sure if the band is supposed to represent the anode or cathode of the tantalum capacitors… but I’m sure they will let me know at some point with a fireworks display. Three rounds of tight MLCC decoupling… and the ADC itself. I’m not so sure about these ferrite beads on the 3.3V rail, but we will find out about them soon enough. And finally, the buffer op-amp, and the output and input resistors.
+
+Okay, that was quite the disaster… Does anyone know of a good brand of solder paste?
+
+Hand soldering didn’t work out too well either. Hyperoptimizing the pad sizes didn’t leave much room even for a knife tip.
+
+In a last-ditch attempt, I tinned the pads with a small amount of solder and lightly stuck the components on with flux before the hotplate treatment. After cleaning, the results look surprisingly good.
+
+It is finally time to give the Pro Pico a dignified playmate. But not before both boards can be powered from a 3.3V low dropout regulator. My go-to LDO is the HT7533, whose only virtue is being cheap and listed on the JLC assembly library as a basic part. I will have to rethink that decision as you will see later.
+
+I’ll take this opportunity to spread some propaganda about the knife tip, whose various edges and surfaces can be used to complete any soldering job.
+
+One of my longest-running complaints as a YouTuber is how difficult it is to solder from behind a camera. I’ve eyed this setup with great desire at the Hakko booth at two successive Maker Faires, but I don’t think I’ll be able to scrape together the money anytime soon.
+
+With everything powered and blinking, it’s time to tackle the management of the flowing electrons, the code. Luckily, that task is as easy as control C and control V. Just kidding, I had to re-write the ‘SPI with chip select’ example first. After flashing the RP2040 for the first time, it refused to do anything else when asked via USB till I added these two lines to the cmakelists.txt file.
+
+And just like that, thanks to some printf magic, I can print neatly formatted, fixed-width binary, hexadecimal, decimal and voltage outputs from the ADC, which facilitate easy debugging.
+
+While everything on the digital side looks good, the LDO doesn’t seem to like the sudden load presented by the ADC during conversion, or the RP2040 handling the transaction, even at the relatively slow speed of 300 kilosamples per second. For now, I can fix this problem using an oversized electrolytic smoothing capacitor on the 3.3V rail, but I might have to find another LDO that can handle switched loads better… Did this sub-project lead to a sub-sub project? Alternatively, I could power the 3.3V rail from the bench supply. The results are cleaner, but long term, I’d like to have the 3.3V generated on-board. 
+
+Another unexpected source of noise is the USB cable itself, which forms a ground loop when connected to the board and adds a few LSBs of noise to the readings. Perhaps it’s time for a sub-sub-sub project, taking advantage of an existing RP2040 UART bootloader and a two-way isolator. Nah, I think I’ll get myself one of these cheap readymade boards from Aliexpress.
+
+At 3 megasamples per second, I’m already running into the limitations of my oscilloscope. With three channels turned on, the sample rate drops to 250 megasamples per second.
+
+Before anybody points it out, I am aware that my probing situation is not ideal, but surprisingly enough, under the limitation of the scope’s sample rate, even a ground spring didn’t help much. Turning off the third channel doubles the sample rate, but that does not make a huge improvement.
+
+There’s still a few LSBs of noise in the conversion, and taking a look at the 3.3V rail at this horizontal scale shows a few millivolts of ripple during the conversion period. The fast conversion means low-frequency ripple does not affect the conversion in terms of LSB noise, but does affect the reading accuracy.
+
+It was at this point that I realized the problems were with the 0402 ceramic decoupling capacitors. At this size and capacitance, the most common dielectric is X5R, which has a terrible voltage coefficient. 
+
+This website contains and plots data from all Murata ceramic capacitors. Here’s a generic 0402 X5R, whose capacitance at 3.3V is only a third of the front page rating.
+
+Using a different dielectric like X7R and a larger package can help mitigate this effect to a large extent. Here, I will steal some 1206 X7R capacitors from an old PCB, and bodge it on to the ADC board where the Tantalum capacitor used to live. There is a noticeable difference - the slight droop in supply voltage is now gone, although the higher frequency components are still there. Also contributing to the improvement was the removal of the ferrite bead, which seemed to do more harm than good… ADI has some interesting things to say regarding resonant frequency and damping of the same.
+
+The capacitower is mostly a joke, none of the levels added after the first one made a noticeable difference.
+
+With the decoupling situation hopefully solved, it’s time to push the ADC further. Here’s 4.5 megasamples per second… and finally, my target for this project, five. I can also push it up to more than six, at which point the ADC is somehow still pushing out bits. 
+
+The RP2040, however, is having a hard time keeping up. The readings are shifted by a few bits at higher clock frequencies. My initial assumption was that the input synchronizer was delaying the bits from the ADC, but removing them didn’t help much.
+
+After an enlightening consultation with Dimin, I realized that the problem was inherent to the ADC itself - the 15 nanosecond maximum delay between the serial clock’s falling edge and the ADC actually outputting the data was causing the RP2040 to read the data on the wrong edge, causing the shift. Adding an extra clock cycle at higher frequencies fixed it. This led to an undesirable compromise - code that would work at higher sample rates wouldn’t at lower speeds, and code that worked at lower sample rates couldn’t scale up because of the bit shift caused by the extra clock pulse.
+
+All this while, the sample rate numbers I’ve mentioned have been in terms of the chip select pulse width, but what about actual throughput? Even with sub-optimal code writing to and reading from the state machine responsible for communicating with the ADC, a speed of almost 5.3 million actual ADC samples per second is possible, maybe even more.
+
+Meanwhile, Aisler has just delivered the latest board revision, featuring a 1206 and 0603 capacitor pair to handle decoupling, and resistors on the SPI lines. I did try shortening the wires and adding series termination resistors between the RP2040 and the ADC, and also increased GPIO slew rate to the highest possible setting, with no major effect.
+
+And after all that trouble, what I hope will be the final revision is ready to be powered by the sub-sub project. The overclocked RP2040 is the biggest consumer on this board, and the 100mA is definitely causing the LDO to heat up, but thanks to the bigger package and higher current rating, it should survive.
+
+The 3.3V rail seems to behave exactly as before during the conversion, with a few mV peak-to-peak ripple. I suspect it is actually better, and that my probing setup is deceiving me.
+
+On a larger timescale, the ripple caused by the sudden load is within 10mVpp, a large improvement from the HT7533.
+
+The last issue with this board seems to be the op-amp output’s unwillingness to go down to ground, despite being specified as having a rail-to-rail output. With the input grounded, the output does not want to go below 44mV. There is exactly one other place in the circuit that has a suspiciously similar voltage drop - the 10 Ω resistor on the positive supply rail. However, shorting it out didn’t fix the problem.
+
+By stepping through various input voltages, the large offset voltage only shows up when the input voltage is within a 100mV of the supply rails, voltages in between are reproduced to within a millivolt.
+
+This exact problem with RRIO op-amps’ outputs is described in the AoE X Chapters, however, the solutions listed didn’t seem to work for me, indicating that this might be a limitation within the op-amp itself.
+
+This is the first time I’ll be using one of these delectable coax cables, hand made in Italy by Andro. Al dente, not too hard, not too soft.
+
+Well, that was disappointing, I guess there’s some things that modern digital oscilloscopes just can’t do. It’s time to power up the old fossil.
+
+Since this is my first time using an analog scope for something serious, I needed to figure some things out. Once everything was set up correctly, the most beautiful XY plot is displayed. Increasing the amplitude of the input signal shows how the outputs saturate to either rail, but follow the input perfectly in between.
+
+The output also shows an interesting saturation characteristic, with the gain decreasing linearly just before saturation.
+
+Well, Texas Instruments, if that’s your definition of rail-to-rail, I guess I’ll just have to live with not being able to accurately digitize the last 50mV to each rail, reducing the ADC’s apparent resolution to 11.95 bits. Whatever control scheme I end up using, I’ll have to make sure not to rely on readings near the supply rails.
+
+And that concludes this delta-sigma sub-project, bringing up a SAR ADC and overclocking it. If every element of this project is going to be similarly complex, with every small detail coming back to bite, I have my work cut out for me.
+
+Description:
+00:28 https://isotech.co.uk/wp-content/uploads/2020/09/microKcallabmagazine.pdf
+01:27 https://www.analog.com/media/en/technical-documentation/data-sheets/ad4630-24_ad4632-24.pdf
+02:00 https://www.analog.com/media/en/technical-documentation/data-sheets/ad4630-16-4632-16.pdf
+03:45 https://www.analog.com/media/en/technical-documentation/data-sheets/ad7276_7277_7278.pdf
+04:19 https://www.renesas.com/en/document/apn/r14an0001-operation-sar-adc-based-charge-redistribution-rev100
+05:41 https://www.richis-lab.de/
+06:11 https://forums.raspberrypi.com/viewtopic.php?t=365702
+07:05 https://www.ti.com/lit/ds/symlink/opa354.pdf
+11:00 https://www.holtek.com/webapi/116711/HT75xx-1v280.pdf
+11:27 https://optilia.eu/products/optical/optical-inspection-systems/w30-inspection-system/
+11:48 https://github.com/raspberrypi/pico-examples/blob/master/pio/spi/spi.pio
+12:50 https://www.ti.com/lit/ds/symlink/tl1963a.pdf
+13:03 https://blog.usedbytes.com/2021/12/pico-serial-bootloader/
+13:11 https://www.aliexpress.com/item/1005007002869421.html
+14:14 https://ds.murata.co.jp/simsurfing/mlcc.html
+19:30 https://x.artofelectronics.net/
