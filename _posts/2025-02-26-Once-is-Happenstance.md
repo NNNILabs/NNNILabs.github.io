@@ -4,7 +4,7 @@ layout: default
 title: Once is happenstance. Twice is coincidence. Three times is divine intervention (?)
 ---
 
-# Once is happenstance. Twice is coincidence. Three times is divine intervention (?)
+## Once is happenstance. Twice is coincidence. Three times is divine intervention (?)
 
 I wouldn't have so readily agreed to go through the trouble of engaging the services of a friend to manage the IT back end of a website, not to mention drill him around with the minute details of *exactly* how I wanted it to look, if not for ulterior motives[^1].
 
