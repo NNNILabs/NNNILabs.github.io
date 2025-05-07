@@ -1,0 +1,184 @@
+﻿DAC To The Future! Part 1 - AD5791 Linearity Calibrator
+
+
+This video is sponsored by Aisler.
+
+
+It is quite widely known - to the point of self-parody - that I am working on a multislope ADC that has yet to show itself performing in any useful way. Performance is the keyword - at six and a half digits, one least significant bit on the single +/-10V input range is 10 microvolts, and the multislope’s use of a nearly ideal integrator enables incredible linearity.
+
+
+My previous attempts at characterizing this linearity - which should be performed with a device that is ideally at least an order of magnitude better - involved my Keithley 2000 and a cheap function generator, neither of which are particularly suited to the task - the former barely falling into the 6.5 digit category, and the latter being extremely noisy.
+
+
+Coordinating activities between three independent devices that use different communication protocols was also difficult - they were essentially glued together with a Python script that spat out a .csv file with raw data that I had to manually process after the fact. 
+
+
+Replacing the voltage source and the DMM will be a 20-bit DAC from ADI’s  extensive line of excellent analog devices - the AD5791.
+
+
+-><-
+
+
+The AD5791 remains undefeated even 14 years after its release, offering 20 bit resolution with an appropriately low integral nonlinearity or INL. The datasheet specifies +/-1 LSB max on the front page, but better results have been reported.
+
+
+At the heart of the AD5791 is an R-2R ladder, which uses resistors to convert a binary-scaled input code to a discrete voltage. Since the input bits are binary-scaled, the simplest ratio to start with is one half - dividing the reference voltage by two. This is accomplished using a voltage divider with two equal value resistors. To generate the next binary fraction, a quarter, we could use another divider on the output of the first, but we can’t get away with that so easily - the resistance of the second stage loads down the first stage. In other words, the bottom resistor of the first stage now has the input impedance of the second divider in parallel, reducing the effective resistance. If we tweak the value of the bottom first stage resistor to get back half-Vref on the output, we achieve both half and quarter Vref. Using the same principle of cascading stages and modifying the bottom resistor, each stage produces a voltage that is half the previous stage’s voltage. The best thing about this divider tree is that all resistors end up being either R or twice that - 2R - which is where the name R-2R comes from. 
+
+
+If we rearrange the circuit a little bit and add binary inputs, we end up with the classic voltage-output R-2R DAC, that outputs a voltage proportional to the input code scaled by the reference voltage. We can extend this method to an arbitrary resolution that is ultimately limited by how well one can match the ratio of R to 2R. 
+
+
+An exception to this limit are Audiophiles, who have found a way to circumvent the laws of physics by avoiding strict objectivity, the backbone of science, and instead making up their own arbitrary definitions of how they want to perceive the world. As tempting as a 32-bit R-2R DAC might sound (pun intended), tolerance, matching and tempco won’t allow it.
+
+
+The AD5791 has another trick up its sleeve - since INL is affected to a larger extent by the resistors that make up the more significant bits, the upper 6 MSBs are implemented as 64 equal value resistors. This reduces INL error by roughly N/64, compared to just N for an R-2R ladder with equal resolution.
+
+
+This ISSCC paper, published by the AD5791’s creators, goes into more detail about the complexity required to achieve incredibly low INL. The paper can be found in the GitHub repository for this project, linked in the description.
+
+
+Ultimately, what makes this all work so well is the fact that every single resistor is on the same 3 x 2 mm die, enabling them to be isothermal and making the output invariant to ambient temperature changes to a large extent.
+
+
+Thanks to Sahko, by the way, who graciously donated one piece of this marvelous DAC. Link to his channel in the description.
+
+
+ADI was so proud of this DAC that they took a subtle dig at Jim Williams’ discrete 20-bit DAC from a decade earlier. Jim had the last word, however, by saying he was expecting this development and overspec-ed his DAC settling time measurement circuit accordingly.
+
+
+The AD5791 has a bipolar voltage output and therefore accepts bipolar references. I will be feeding it with +/-10.5V derived from a 7V zener reference, scaled appropriately by a pack-of-eight resistor network. The resulting +/-10.5V output swing covers the usual +/-10V input range expected from a precision A to D system.
+
+
+My original plan was to prototype the circuit that goes around the DAC, but since most of the work was already done by ADI a decade ago, I decided to skip the prototype and move directly to a PCB. 
+
+
+The PCBs I ordered for this project were sponsored by Aisler. Their high-quality PCBs are worlds apart, quite literally, from the Chinesium I am so used to. PCB art really stands out thanks to the high resolution solder mask, and the ENIG finish lends it a special gleam.
+
+
+The 7V zener in question is the ADR1399, AD’s improved successor to the classic LM399. The ADR has LTZ-level noise in the same easy-to-use two-terminal reference for the affordable price of 20 Euro per piece. The datasheet also hints at very good long-term stability.
+
+
+A NOMC thin-film network-of-eight, in this case the 10K flavour, is used to scale the zener voltage up to +/-10.5V. I somehow managed to get a few decent solder joints, but after the camera started rolling, things refused to work out so smoothly.
+
+
+The DAC was soldered to the board using the GreatScott! method…well, allright, I won’t say that again.
+
+
+The end result is pretty good, even if I say so myself. Powering on a board populated with nearly a hundred and fifty Euros’ worth of parts is scary, but nothing blew up, and all the voltages seemed right.
+
+
+And now for the bane of my existence - I need to write software for this thing. The choice of microcontroller was, of course, a Raspberry Pi Pico. I borrowed the SPI example code for PIO and got that up and running in no time.
+
+
+As always, the problems came from between the seat and the keyboard - I had accidentally connected the DAC’s serial output pin to an output on the Pico, causing a short. Luckily, nothing was permanently damaged. I also realized quite late that the DAC was expecting configuration, and that I needed to send out a dummy transfer to set the GPIO pins to the right state.
+
+
+With everything up and running, I could now waste time sending the DAC various input codes to get the output to settle at exactly 10.00000 volts. Of course, you could just fiddle with various input values till you settle on the right input code like I’m doing here, but there’s a smarter method. 
+
+
+Feed the DAC two random values from its input range and measure the output to the highest resolution and accuracy possible, and then calculate gain and offset using simple grade-school mathematics. Working backwards, you should be able to calculate the input code needed to deliver exactly the output voltage you want. This is, in essence, calibrating the DAC to remove gain and offset errors. Of course, this crude calibration is only as good as the device measuring the DAC output, so take the readings from my Keithley 2000 with a grain of salt and a whole lot of copium.
+
+
+I noticed that the output was not particularly stable or low noise and that the linear regulators were getting extremely hot, but I was itching to get the board characterized. To that end, I 3D printed a case that took advantage of the thermal slots, and also included a well for the ADR to protect it against air currents.
+
+
+With that, the DAC was ready to have its INL compared to a 3458A. The results were extremely disappointing, and I got sent off with a polite “come back with another revision”.
+
+
+The problem was obvious even before the INL run - I was running 1mA through the sense leads, which caused a large deviation in the reference voltages over the entire output range, which negatively affected INL.
+
+
+Jaromir suggested shorting the sense and force pins together to divert current from inside the IC, and that resulted in a consistent but cubic INL. The output voltage was now rock solid and didn’t change much even by blowing directly on the PCB.
+
+
+The next step was to add reference buffers that drive the force pins, while drawing no current from the sense leads. The bodge was quite ugly, but it worked - INL was now within the expected limits.
+
+
+I ran the usual battery of INL tests, and discovered that the reference voltages drifted slightly in correlation with the output voltage - this turned out to be because of uncleaned flux, and removing it solved the problem.
+
+
+After running a few more sanity checks including doing an INL run with the input codes in random order, I was finally convinced that I had a working circuit. If only I had prototyped this first…
+
+
+I quickly designed a new revision, this time with provisions to make it Eurorack compatible, following Mark’s ProtoCard template. Improvements include a digital isolator between the DAC and the Pico. This solves power backfeeding issues that caused the excess current draw problem on the previous revision. Note to self, the Pico does not like to have external power and USB power at the same time, even with the on-board switching regulator disabled. I also changed the configuration of the reference scaling resistors to have an equal voltage drop across each resistor, resulting in uniform power dissipation. It probably does not matter at the 6.5 digit level, but I consider each design choice that can squeeze every last part per million out of a design good practice.
+
+
+While waiting for the new PCBs, I ran a week-long logging session of the DAC output and a temperature sensor. The drift over this time period stayed in the single ppm range, and the output was surprisingly resilient to ambient temperature changes.
+
+
+The new PCBs look even better than the previous version, and the artwork was good enough to impress even Pippy - that says a lot about Aisler’s quality.
+
+
+This time, I decided to save myself some trouble and got a stencil to go with the boards. After harvesting the components off of the old board, pasting and populating the new one, I was ready to reflow on my electric stovetop.
+
+
+This worked surprisingly well, and after populating the through hole components, the board worked perfectly on the first power up.
+
+
+To save myself the pain of having to solder, desolder and resolder leads to the board during testing, I made myself one of Takovsky’s voltnut-grade multiplexers, the board for which was kindly sent to me by Jaromir last Christmas.
+
+
+Another little quality-of-life upgrade was making a reference cap with threaded inserts. I messed up the first attempt because I didn’t read the instructions, but the second time worked like a charm and added some superfluous fanciness to this project. A link to the files can be found in the description.
+
+
+Putting this all together, I have a space-consuming but fully automated test setup. All I had to do was write some more Python code to get the data I wanted.
+
+
+Each of the three reference voltages drifted less than 2uV over the course of an INL run, which was quite a good result, but the INL had a distinct cubic characteristic. I was not satisfied with this and tried various methods to correct it, but the fact that you can’t really correct a DAC’s INL, especially if the INL is less than an LSB in size, flew over my head. What I was really doing was moving horizontally along the INL curve by changing the input code.
+
+
+As a last resort, I tried changing the lin comp bits, and one setting actually helped reduce INL. Unsurprisingly, this was a skill issue on my part - the lin comp bits are actually meant to be set according to the input reference span, which I had not done.
+
+
+Now I finally had an INL that was just below +/-0.5ppm. This was a pretty good result, but I decided I could do better. 
+
+
+Since this is a 20 bit DAC, there are 1048576 possible output levels - and I was sure some of those levels would deliver much lower INL. I re-ran the INL runs, but this time with a step size of 1024, which included both the 6 MSBs and the R-2R section. I got excel to tell me which input codes delivered consistently low INL, picked 20 values that represented evenly-spaced voltage steps, and to my surprise, this method worked, delivering lower INL over multiple runs.
+
+
+With these results in hand, I was ready to send the DAC off for another round of characterization.
+
+
+The INL plot was much less noisy this time around, thanks to the use of a 3458A, which also reveals the true shape of the curve with the 64 MSBs. All that was left to do was generate and measure 1024 points and select 20 evenly-spaced points with low INL. This worked even better than last time, giving me an overall INL of +/-0.1ppm, which translates to an accuracy of 1uV on a 10V range, taking into consideration gain and offset errors.
+
+
+Of course, my joy was short lived - the INL curve developed a mysterious bump in the next set of characterization rounds. The only difference to the previous runs was an ACAL on the 3458A, which should theoretically not affect linearity.
+
+
+To see where this bump came from, a whole new set of tests were run. First the INL of the 64 MSBs between 20 and 40 degrees celsius in 5 degree steps, then the R-2R ladder was added to the mix, which didn’t have as big of an effect as expected. So the next run was just the 14 R-2R bits, which also showed a low dependence on temperature. As a last resort, the previously selected points were put through the same temperatures, which provided no explanation for the bump.
+
+
+It took me long enough to realize that the reference that was feeding the DAC, the ADR1399, was not really meant to provide sub-ppm noise or stability, even over a short INL run, so expecting the 0.1ppm selected points not to be affected by temperature, air currents or zener noise was a long shot. This time, I will have to concede and call +/-0.5ppm good enough.
+
+
+My plans for the DAC weren’t finished yet. I got myself somebody’s industrial apprenticeship project, housed in a nice Eurorack subrack. The actual linear regulator guts are of no use to me, but the toroidal mains transformer combined with a few 3D printed parts should make a good housing for the DAC and any other project I decide to characterize using it.
+
+
+Pulling the strings via I2C is a Raspberry Pi 4B, precariously press-fit to a 3D printed back plate, providing access to USB and Ethernet. The mains transformer was slightly modified with some 78 and 79 series 15V linear regulators. Signals and power are piped to each module through a backplane PCB, also manufactured by Aisler.
+The DAC board had to be modified a little to fit in with the rack system, which involved removing the on-board linear regulators and bypassing the digital isolator.
+
+
+Things didn’t go so smoothly, however, since I messed up the rack’s linear regulator. The 100uF capacitors and small SOT-89 linear regulators couldn’t keep up with the multiple 100s of mA load presented by the modules. Particularly embarrassing was the undersized capacitors filtering the output of a puny half-wave rectifier. 
+
+
+I quickly hacked together a better board using two 7815s in a slightly unusual configuration to generate the bipolar 15V rails. Adding 10mF filter caps and a full-wave rectifier eliminated all power supply issues.
+
+
+It took me 48 hours to figure the next issue out - the Pi was sending out an extra byte with each I2C transmission, and this issue was remedied by using a different write function. That was fortunately the last problem I had to fix before the rack was fully operational.
+
+
+A much less copious amount of Python glue is necessary this time, since all devices communicate using the same I2C protocol. On the device side, communication is handled using a header file authored by Dimin. With this system, I can write arbitrary programs that can pipe data between the host and the peripheral, while also logging the necessary data in a CSV file.
+
+
+The DAC (or should I say rack?)’s first victim is also the subject of the next video, whose INL is unfortunately not as spectacular as promised. But that’s a story for another day.
+Description:
+* https://github.com/NNNILabs/AD5791-Linearity-Calibrator
+* https://aisler.net/ 
+* https://www.analog.com/media/en/technical-documentation/data-sheets/ad5791.pdf
+* https://www.eevblog.com/forum/metrology/ad5791-based-dac-platform/msg4610125/#msg4610125
+* https://www.analog.com/media/en/analog-dialogue/volume-44/number-2/articles/20-bit-dac-and-accurate-precision-voltage-source.pdf
+* https://www.analog.com/media/en/technical-documentation/application-notes/an86f.pdf
+* https://www.youtube.com/@Sahko123
+* https://github.com/macaba/Nuts/tree/main/kicad-templates
+* https://www.printables.com/model/746207-voltage-reference-cap
+* https://github.com/raspberrypi/pico-examples/blob/master/pio/spi/spi.pio

@@ -1,0 +1,181 @@
+﻿AN-260 - Jim Williams’ ADC Masterpiece
+
+
+Jim Williams was the biggest blessing the analog design world had. He was not only extremely good at his craft, he also took the time to write a long list of incredible app notes about the equally incredible circuits he came up with. He takes us by the hand and reveals every single one of his circuit design, construction and measurement techniques. These wonderful documents have inspired a new generation of electronics hobbyists to try their hand at the finicky art and science of analog design.
+
+
+The Jim Williams app notes are in stark contrast to whatever this is… I have to ask myself, how did this circuit ever find its way into what is so boldly called an ‘analog design journal’ in large letters on the front cover? 
+
+
+How are these two things tied together? Once upon a time, Jim Williams worked at National Semiconductor and then left to work at LT instead. Eventually, National got taken over by Texas Instruments, and with it, the application notes that Jim wrote while at National.
+
+
+One such app note is AN-260, which bears all the hallmarks of Jim’s characteristic writing style, but is devoid of a name. It describes an interesting converter which implements three-phase auto zero. Upon closer inspection, this converter is a single slope, which has long since been discarded as a technological dead-end.
+
+
+-><-
+
+
+Jim Williams has written a few app notes about ADCs and DACs, but this one stands out since it is a completely original design, in the sense that it does not utilize or showcase existing building blocks. But why would Jim Williams be interested in what is considered a technological dead end?
+
+
+The answer to that question can be found in this article on the Electronic Design magazine website: “I’m aware of their obvious weaknesses, but the simplistic elegance of the architecture has always kept me interested.”
+
+
+After reading the app note, I found myself infected with Jim’s fascination, and I came up with a modernization plan.
+
+
+The original schematic in the app note is sprinkled with 1980s copium - most of the circuitry is only here to drive the JFET analog switches that form the input multiplexer and integrator reset circuit. They can be replaced with a modern bipolar analog switch IC like the TMUX7234, which also conveniently comes with logic level inputs, eliminating the need for level translation.
+
+
+The choice of integrator and input buffer op-amps goes without saying - OPA140.  In the position of the slope amplifier is an ADA4522-1 chopper, which can resolve microvolts with ease, hopefully increasing linearity.
+
+
+The comparator itself is not critical, so I decided to stick with the LM311.
+
+
+Lastly, instead of using two separate reference voltages to generate the integrator ramp and provide a calibration reference, a single ADR1399 does both.
+
+
+The footnotes to this schematic do mention a few special components like the ramp and input resistors. Thanks to the three-phase auto zero that happens every measurement cycle, all circuit non-idealities are calibrated out, and the entire conversion hinges only on the reference voltage, so I’ll be using standard ±25ppm/°C 0603 resistors in all positions.
+
+
+A single slope ADC is the simplest analog to digital converter, unless you consider a flash ADC with its resistor ladder and logic soup to be any simpler to implement. A ramp that ideally encompasses the input range is compared to the input voltage using a comparator. The comparator gates a digital counter, which is started in sync with the ramp and stopped when the comparator switches. The result is a digital code that is proportional to the input voltage. The faster the counter counts, the higher the resolution. Of course, you can’t easily extend this to extremely high resolution - linearity depends on the ramp being perfectly straight and noise depends on how consistently the comparator can compare.
+
+
+Consistency is the last thing to expect from a regular comparator. The datasheet for the jellybean LM311 does not specify offset and bias drift with temperature, noise, or common mode rejection ratio, all of which can contribute to noise and INL.
+
+
+Jim Williams solved this problem by using a slope amplifier. Here’s a conspiracy theory from Mark: This is where the designers of the HP3458A found inspiration for the slope amplifier in their multislope design.
+
+
+The ramp voltage is converted into a current using a resistor that is fed into the summing junction, along with the input voltage, also converted to a current using a resistor. The amplifier has its gain clamped by a pair of antiparallel diodes. When the ramp and input currents are equal, the diodes go out of conduction and have an essentially infinite resistance. The gain at this point is determined by a high value gain setting resistor that is connected across the diodes. At this exact point in time, slope amplifier slew rate is maximum. This consistent and precise zero crossing can then be fed into the comparator for digitization.
+
+
+Some implementations of a single slope ADC even have the ramp generated digitally. A digitally generated reference to compare against has some advantages - the generated ramp can be positive, negative, fast, slow, or even not a ramp - time is ripe for a mathematically charged attempt to reach an n bit conversion in the least amount of time possible. For that we look at binary search - this involves dividing  the search area in two depending on whether the item being looked for is in one of the two areas. First, the input range is divided into two - since the input voltage is in the upper range, the MSB is a one - now the upper range itself is divided into two sections, and depending on where the input voltage lies, the next bit is either a zero or one. This process continues for as many cycles as needed to achieve the resolution desired - each loop provides one bit of resolution, or doubles the number of voltage ranges being measured. This way, extreme resolution can be achieved in a handful of clock cycles - a resolution of one part in one million can be achieved with just 20 cycles. This method could be extended to even 32 bits - and yes, 32 bit successive approximation ADCs exist. But the real question is, are these 32-bit ADCs really 32 bits? And what constitutes 32-bit performance anyway? All those questions are best left for another time. Back to the single slope.
+
+
+The three-phase auto zero scheme mentioned earlier is what makes this single slope special. First, the input multiplexer is set to ground and the counts equivalent to 0V are read. The same thing is performed with the reference voltage, and then the input. The three counts are then put into this formula to derive the output voltage. The only absolute quantity here is the voltage reference, which can be calibrated externally. This measurement is purely ratiometric - what is actually being measured is the ratio of input voltage to the reference voltage, which is converted into the input voltage by multiplying by the absolute reference voltage that is calibrated externally and its value saved in memory. Even if the individual readings drift with temperature and time, the final calculated output is rock solid and drift only depends on the reference.
+
+
+And that was Jim Williams' take on improving a single slope ADC.
+
+
+Pulling the strings in my redesign is, of course, a Raspberry Pi Pico. High resolution is achieved by using a high counter speed, so I’m overclocking to 400MHz. The PIO code I’m using to run the reset switch and count the comparator’s output pulse takes up four clock cycles, so the effective time resolution is 10ns. I’m using a 20ms ramp in the hopes of getting some kind of power line rejection going, so the ultimate resolution of a single reading is 20 bits.
+
+
+This circuit is also intended to be the first test run of my prototyping system.
+
+
+Following an incremental construction approach, the first thing soldered to the copper clad board is the ADR1399 reference. I messed up and got a couple of the LCC variant instead of the usual metal can with plastic lid, but it should do. Of course it shorts the power supply. Lesson learned - when using the ADR1399 as a negative reference, don’t connect the heater to a bipolar supply. I’m assuming the protection diodes caused a short across the positive rail. Luckily the ADR escaped unharmed.
+
+
+Next up, the integrator op-amp. I initially chose a TI audio op-amp because it had the lowest gain-nonlinearity, but this ended up being a bad choice as you will see later. 
+
+
+Since I don’t have the integrator reset switch on the board yet, I have to manually reset the integrator with tweezers, which worked - a beautiful ramp into saturation.
+
+
+With the reset switch connected to the integrator and the Pico, a clean -5V to +5V ramp is generated. I deliberately chose a bipolar ramp since that enables a bipolar ±10V input range, unlike Jim Williams’ single 0 to 10V input range.
+
+
+The input buffer, slope amplifier and comparator were trivial - and just like that, a pulse that is proportional to the input voltage. The slope amplifier also works beautifully, creating a sharp zero crossing where the ramp and input voltages intersect.
+
+
+While admiring the results of Jim Williams’ work, I noticed that the output pulse had an occasional glitch, which also showed up in the readings.
+
+
+I was able to track this down to spurious noise on the output of the slope amplifier, which was causing the comparator to misfire.
+
+
+Now, this is obviously the symptom of a bigger problem, but I chose to treat the symptom instead of the cause and placed a 10Ω resistor across the inverting and non-inverting inputs of the slope amplifier and reduced its noise gain.
+
+
+The readings from the ADC were still extremely noisy - for something that should theoretically have a 10μV resolution, a few millivolts peak to peak noise was simply unacceptable.
+
+
+One suspect is the input buffer, which is just an OPA140 follower. The OPA140 has a unity gain bandwidth of around 10MHz, so a wide range of signals - and noise - are faithfully reproduced. Of course, a filter on the input of the buffer would greatly reduce the advantage of a high input impedance buffer, so I ended up building a DC accurate filter around the op-amp - basically a buffer with a filter on the output, and feedback from the output of the filter. If the op-amp is not slowed down appropriately, it just turns into an oscillator. Some advice from Mark - the compensation RC network must have a time constant that is much greater than that of the filter RC. Now the frequency response of the input buffer rolls off smoothly, without affecting the input impedance.
+
+
+That didn’t do much to improve the noise situation, so I had to look elsewhere. But since I was really not sure where to look, I tried a different approach. While plotting the ADC output via serial, I poked around at various nodes in the circuit to see where the most noise would be injected through the human body antenna.
+
+
+One of these nodes was the non-inverting input of the integrator op-amp. I took a quick look in the datasheet of the TI audio op-amp I had chosen for the job because of its low gain nonlinearity, based on a measurement from Bob Pease. The noise performance, however, is nothing to write home about. After replacing it with an OPA140, the noise was greatly reduced.
+
+
+Unfortunately, this was the only modification that resulted in any significant change. Even placing the ADC in a cookie tin to shield it from external interference didn’t help.
+
+
+In the app note, the analog section is optically isolated from the digital section, so I decided to try that as a last resort. I soldered two ADI isolators on a handmade adapter - which was one of the intended use-cases of my prototyping system, by the way - and then air wired that to the main prototype board. The resulting mess was quickly getting hard to modify and probe, plus no one really seemed to like the point-to-point wiring. So I quickly depopulated the copper clad board and moved everything to the ever remarkable Mark’s Manhattan Toolkit.
+
+
+The Manhattan Toolkit is a polished system for analog prototyping. It consists of a four layer base board, featuring a ground plane on the top and bottom, and power planes on the internal layers. The power planes are broken out to pin headers that are placed at regular intervals, and are meant to be connected to the outside world through a 3.5mm 3 pin connector.
+
+
+Wiring using silvered copper wire is clean and quick, no tinning necessary. The clearly defined pads on the adapters also prevent solder accumulation and flux hardening in the crevices.
+
+
+In no time, I got the single slope running, but it looks like the noise on the slope amplifier is inexplicably back. After some difficulty setting up the trigger correctly, I used my 465B to make sure the spikes were not just a digital scope issue. Apparently not.
+
+
+It looked to me like the spikes were intermittent but regular, so I captured a few slope amplifier zero crossings to see where they turned up. And as I’d guessed, there was a pattern - the spikes appeared when the input mux was switched to the reference. 
+
+
+Investigating that turned up a devious solder joint failure. Although it was not the cause, it is certainly a very interesting failure mode to look out for in the future.
+
+
+The actual cause was much more insidious - I had wired the input multiplexer wrong. The GPIO pin from the Pico that was supposed to control the switch was instead connected to one of the switch poles, injecting noise from the 3.3V rail wherever the pin went high. This was also not the issue that caused the noise, but it pointed me in the right direction. It was the Pico’s switching regulator all along, and changing it from PFM to PWM mode removed the noise entirely.
+
+
+To improve converter noise, I decided to make another modification. Since the non-inverting input of the integrator was contributing to noise, having it connected to a resistor divider, which itself was fed from the noisy reference, was not the best idea, so I decided to ground it. This results in a unipolar integrator ramp from 0V to 10V. To maintain a bipolar input range, I injected a reference-derived offset current into the summing junction. This yielded a slight improvement.
+
+
+Looking more closely at the zero crossing of the slope amplifier, even PWM mode was injecting some noise. This was the last straw, and I decided to power the Pico from an external linear power supply and swore never to involve the switcher in any of my experiments ever again. Luckily, Dimin just came up with the Pro Pico that features an oversized linear regulator. I hope to get my hands on some more very soon.
+
+
+I did mention power line rejection before and how single slope ADCs don’t have inherent input filtering like true integrating ADCs do. That’s where the 20ms ramp time comes from, and it’s time to see if it actually helps with rejecting normal mode mains noise. 
+
+
+Since a single mains cycle is 20ms, if the ramp time is the same, each reading starts and ends at the same place on the mains sine wave, thereby rejecting it, at least in theory. The same is true for multiples of mains frequency.
+
+
+To test this, I connected my function generator to the input of the ADC, and connected both to a Raspberry Pi for some advanced data logging. The function generator is set to output a sine wave with an amplitude of 20V peak to peak and the frequency is swept from 1Hz to 100Hz with a resolution of 1Hz, the ADC peak to peak value is noted, and the decibel ratio between that and the function generator output is plotted versus frequency, resulting in this interesting looking graph.
+
+
+With no averaging, the converter wants to reject 70Hz more than 50Hz, and with averaging, the results are wild. For this, I currently have no explanation.
+
+
+One selling point of this design was high linearity, which I can now test thanks to my subrack system and the AD5791 DAC board. So I quickly made some hardware changes to the prototype board, 3D printed a front panel adapter, and I was ready to go. Well, almost - to prevent excess noise caused by air currents, I wrapped the board in some bubble wrap.
+
+
+The first linearity run delivered a surprising result of a hundred ppm, which I’m sure is a math error because all future runs had an order of magnitude less INL error.
+
+
+What interested me most was the shape, which looked like a truncated cubic polynomial. I had a hunch that the full cubic shape would reveal itself if I switched back to a bipolar integrator swing. Modifying the circuit was a breeze thanks to TMT, and I got my results in no time. My hunch was right - the full shape was cubic.
+
+
+Based off of a conversation with those more experienced in the craft, I doubled the resistance of the resistors that fed the summing junction of the slope amplifier, and sure enough, INL decreased below the ±10ppm level. I switched back to a unipolar integrator to reduce noise, averaged the results of 100 runs and finally got to single digit INL. This is far from the promised 20-bit or 1ppm level linearity, but it’s still quite impressive. 
+
+
+The noise floor remained firm at around 200μV peak to peak with averaging, and I couldn’t do anything else to reduce it. The app note mentions careful shielding and grounding, although no pictures of the physical circuit exist. The closest thing I could find was this singular image of an Ultra-high speed single slope A to D converter from Jim’s bench at the ‘An Analog Life’ exhibit, which might be the one from AN-13. In a similar vein, I made a sandwich with another empty TMT base board in the hopes of achieving some electrical shielding, with some packing material in between to isolate the components from air currents. Just the shield alone didn’t make much of a difference, but connecting the ground planes on the blank board to circuit ground made a small but noticeable difference. Maybe with better shielding in closer proximity to the parts would have made a bigger difference, but given the maze of wires, I’m not sure how I would pull that off. 
+
+
+Here’s a useful trick, also from Mark: when calculating the RMS of a series of readings, the simple root of mean of squares formulas does not take into account any DC offset on the signal and might deliver slightly higher RMS values. Excel’s built-in STDEV.S function takes this into account and delivers the correct RMS value.
+
+
+As with all precision analog circuits, this one fell victim to a subtle effect. I noticed a disproportionate increase in noise with faster ramp times which I was not able to explain. Upon taking a closer look at the waveforms, the middle ramp was jumping around ever so slightly. Taking a look at the output of the input buffer, the cause was clear - the ADR1399’s output didn’t like the load transient caused by the input mux switching. Since the ramp is derived from the reference, the slope is also affected. Ideally, the reference voltage should be buffered by an op-amp to isolate it from large or switched loads, but as a quick fix I added a 10kΩ resistor between the reference and the input mux, which fixed the issue. Maybe this is why Jim Williams used separate references to generate the ramp and calibrate the ADC.
+
+
+Despite my only partial success, I got both Mark and Jaromir interested enough to build their own versions of this ADC. Mark was kind enough to publish a schematic, a picture of his board and the code in a branch of this project repository, which can be found in the description, along with a link to Jaromir’s repository. Both converters seemed to have a noise that was somewhat consistent with mine, so I can somewhat confidently say we pushed this design to its limits.
+
+
+In the grand scheme of things, even forty years after the publication of this app note, single slope ADCs have remained a dead end in precision applications, having been overtaken by true integrating ADCs like multislope and delta-sigma. The only corner of electrical engineering where single slope ADCs have any significance seems to be CMOS imaging sensors. For all other intents and purposes, they are now extinct.
+
+
+Description:
+* https://www.ti.com/lit/an/snoa597b/snoa597b.pdf
+* https://www.elenota.pl/datasheet-pdf/88809/National-Semiconductor/AN-260
+* https://www.ti.com/lit/an/slyt845/slyt845.pdf
+* https://www.electronicdesign.com/technologies/analog/article/21754206/using-delta-sigma-can-be-as-easy-as-adc-part-2
+* https://www.flickr.com/photos/mightyohm/6780033428/in/album-72157629444825281/
+* https://www.analog.com/media/en/technical-documentation/application-notes/an13f.pdf
