@@ -1,0 +1,225 @@
+﻿DAC To The Future! | PWM DAC 2 - Active RC Filter, MASH, Newton’s method & Self-calibration
+
+
+ It’s time for another rebuild of the PWM DAC. Synchronous filtering, which I investigated in the last video, failed to live up to the expectations of low ripple and fast settling, which were complicated by the dynamics of switched systems and imperfect component matching.
+
+
+At the end of the last video, I hinted to using these mysterious PCBs, which take a step back from synchronous filtering to active filtering, which forms the premise for this video.
+
+
+<intro>
+
+
+The Fluke 5700A calibrator has a spectacularly low typical nonlinearity on the 11V range of 0.3ppm, and a noise specification indicative of low ripple on the DC output. The block diagram on page 2-9 of the service manual provides some clues as to how this performance was achieved - a PWM DAC, combined with what Fluke calls a five pole filter.
+
+
+To a world where active filters are always associated with the Sallen-Key topology, the detailed schematic on page 7-55 might come as a surprise - this rather obscure topology forms the 5th order lowpass filter that converts a pulse-width modulated square wave to a smooth DC output.
+
+
+This filter topology does not, surprisingly, seem to have been named by a person, but instead goes simply by the adjective DC-accurate. A quick search might lead you to the LTC1062, which is a switched capacitor implementation of the same topology. This filter, however, has origins that go way past LT - when Mark found this in Burr-Brown’s Applications of Operational Amplifiers from 1973, he was impressed enough to design an application-specific TMT board based on it.
+
+
+As with all circuits, there are more ways than one to understand how it works. I like to think of this as a regular RC filter, but with a highpass filtered and inverted version of the ripple subtracted from the output via the main filter capacitor. Since there are two RC pairs, the overall circuit has a second-order response, and with the values I’ve selected, I can expect more than 140dB of ripple attenuation at 10kHz.
+
+
+Since I didn’t have the requisite 220nF TDK C0G capacitors needed to populate this board, I decided to go for a fully discrete implementation of the filter. I’ll be reusing the Wima MKP capacitors from before, as well as the analog switch. The compensation circuit has been made switchable, so I can add or remove it from the overall circuit. The output ripple amplifier has been moved out of the way and generally cleaned up.
+
+
+One change compared to the original DC-accurate filter is the addition of a low-pass pre-filter, which takes care of the sharp edges from the analog switch, which the active filter has a difficult time dealing with, thanks to the op-amp’s output impedance increasing with frequency.
+
+
+There is one addition to the filter that is not part of the topology in the book - an RC pre-filter. This part of the bode plot does not tell the whole story. At higher frequencies, the op-amp does not have enough output bandwidth to cancel out ripple - it turns inductive. This 20dB/decade decrease in attenuation causes the fast rising and falling edges from the analog switch to pass through the filter to the output. An additional RC filter cancels out the 20dB slope and provides a perfect response.
+
+
+This first attempt delivered predictable results - the INL was mostly quadratic, but just a second-order correction was apparently not enough - a third-order correction is needed to get the INL down to below 1 ppm.
+
+
+With basic operation verified, it’s time to try the compensation amplifier. Surprisingly enough, this time, it’s not enough to fix the INL completely. It took me some poking around to find out that the pre-filter was the cause, so I’ll have to trade ripple for linearity. The tradeoff is disproportional in terms of ripple; connecting the compensation circuit seems to increase ripple drastically. 
+
+
+One possible cause might be the output ripple being amplified by the compensation amplifier, which is directly connected to the filter’s output. During his experiments, Mark cleverly sidestepped both this and the pre-filter linearity issue by using a post-filter and a buffer, and the input to the compensation amplifier is filtered again.
+
+
+The compensation amplifier had a rather disappointing effect on INL, being unable to remove it completely. If perfect compensation is not possible, it might be time to explore other ways to correct the DAC’s raw INL.
+
+
+As I learned while working on the AD5791, a DAC’s INL can only be internally corrected if the magnitude of the INL error is much larger than the DAC’s LSB size. 
+
+
+While the raw INL error is currently on the order of hundreds of ppm, a correction down to sub-ppm levels requires sub-ppm or microvolt settability. With the ±10.5V references, that needs a 20 million count resolution. Even if I overclock the RP2040 to 400MHz, 20 million counts would reduce the PWM frequency to tens of Hertz, which exponentially increases the filtering requirements.
+
+
+The solution to this problem can be found in a topic I’ve been dying to introduce in one of my videos ever since I discovered Andrew Holme’s incredible website in late 2023 - MASH modulation.
+
+
+As the acronym hints to, pulse width modulation modulates the duty cycle of a square wave, thereby modulating the average DC component - the higher the duty cycle, the higher the DC component after averaging.
+
+
+Supposing we had a PWM generator with a counter wrap value of 10, the duty cycle resolution is 10% - which means it can increase in steps of 10%. If the output is high for 5 counts and low for the remaining 5, a duty cycle of 50%, the average output is half the peak to peak value.
+
+
+What if we wanted a duty cycle of 51%? One way to do this would be to modulate the duty cycle itself - if we set the PWM compare value to 60% for one cycle, and 50% for nine - the average DC value over the ten cycles would be equivalent to a PWM signal with a 51% duty cycle.
+
+
+Generating a modulated compare value is relatively easy and can be accomplished using a clocked digital adder with an overflow bit. The adder has a specific width or modulo, in this simple example, eight. What this means is that the adder cannot output a value greater than seven, and such an addition would set the carry bit.
+
+
+One input of the adder is the value we would like to modulate onto the  main PWM signal, and the other input is connected to the output of the adder. The adder is clocked by the PWM clock.
+
+
+This simple feedback adder is easily simulated in excel. If the input is one, the counter counts up steadily, overflowing and setting the carry bit every eight clock cycles. With an input of two, the counter overflows two times every 8 cycles.
+
+
+This overflow bit is added to the main PWM count, and the effect is clear - the modulation is happening over 8 PWM cycles, and the resolution in this case divides the main PWM resolution by 8.
+
+
+This method has one fatal flaw - the modulation, taking place over multiple PWM cycles, creates subharmonic ripple - frequency content that is much lower than the PWM frequency, which the filter cannot adequately remove.
+
+
+Enter MASH - a contrived acronym for MultistAge noise SHaping. The MASH modulator seeks to circumvent the subharmonic ripple by shaping the noise such that most of the modulation content is concentrated at higher frequencies, making filtering easier.
+
+
+The MASH modulator can be thought of as a digital delta-sigma modulator, outputting a noise-shaped bitstream whose long-term average is equal to the input value.
+
+
+It accomplishes this using cascaded overflowing counters, whose outputs are highpass filtered and added together to produce the modulation output. The average of the modulated output is equal to the fractional input value divided by the counter modulo.
+
+
+The modulation depth depends on the modulator order - for this fourth-order modulator depicted on Andrew’s website, it is 16, since each stage doubles the depth. These 16 values between -7 and +8 are added to the quantity being modulated.
+
+
+This page goes into incredible detail about MASH modulation, and its application in a phase-locked loop with a mouth-watering 0.1Hz settability.
+
+
+Luckily, Andrew also makes his MASH code available, which I adapted for use with the RP2040. The flexibility of this software implementation means that the counter modulo is not limited to powers of two, and I will take advantage of this fact to achieve microvolt settability.
+
+
+The measured values of the positive and negative reference voltages are noted in units of microvolts. These values are used to determine the reference span, also in microvolts. Dividing this large number by the PWM counter wrap value results in the necessary modulo needed to achieve 1 microvolt settability. The input to the modulator is in units of microvolts, which is split into integer and fractional parts based on the modulo. The fractional part is fed into the MASH modulator, which returns a modulation value, which is finally added to the integer part and fed back into the PWM compare register.
+
+
+The result is perfect modulation - the center values occur more often than the extreme values, depending on the fractional counts. The effective PWM resolution is around 21 million counts, despite the wrap value only being 1200.
+
+
+The fun does not end here - now that the resolution of the DAC is much higher than the INL error, correction is a real possibility. The DAC transfer function can easily be derived by plotting the input setpoint and the output, in the same units as the input, and using Excel’s LINEST function to determine an nth order polynomial. The n in this case is three, since that best describes the input output relationship.
+
+
+An ideally linear transfer function would make it very easy to find the input code needed to achieve the desired setpoint, but in the real world, the quadratic transfer function makes the output deviate from the input setpoint by a value that is neither constant nor proportional to the input code. How do I determine the input code, in this case, 6, needed to achieve exactly 5 on the output?
+
+
+Mathematical literature tells me that a general inverse function for a third order function does not really exist.
+
+
+The solution to this tricky problem is the same LTspice uses to solve nonlinear equations.
+
+
+Newton’s method is a root-finding algorithm that uses the first derivative of a function to successively refine an initial guess. The zero crossing of the first derivative at the initial estimate is used as the next guess. The derivative at this new point is used, once again, to calculate the next guess. The guesses get exponentially better, if you ignore the fine print about convergence. Within a limited number of guesses, the algorithm converges arbitrarily close to the root, specified by a tolerance value, upon achieving which the algorithm can be stopped.
+
+
+But how can a root-finding algorithm help calculate the inverse of a cubic polynomial? The magic trick here is to offset the whole transfer function by the desired input code, in this case, five. Newton’s method makes quick work of finding the root of this new function, which happens to be exactly the value we need to put into the DAC to achieve the desired setpoint.
+
+
+This method is surprisingly effective and quick enough on the RP2040 - the transfer function is analyzed and the coefficients determined using Excel, after which the values are stored on the RP2040, which can then correct the input code internally.
+
+
+The INL is now instantly in the sub-ppm realm. I tried a second, third and fourth order fit. Second does not remove all the INL, and the fourth is not much better than the third, which I decided to use.
+
+
+Back on the filter side, I was not having much luck with the ripple of my discrete filter, which is just barely under a millivolt peak to peak. Once again, bigger capacitors are not always better. Since I had some tried-and-tested LPF-A-v1 boards anyway, I decided to populate them and see if using them improved performance.
+
+
+Thanks to my increasingly constrained budget, some parts had to be salvaged from older projects, but others are taken from fresh stock. Both op-amp positions are populated with OPA140, a choice with which you can’t go wrong, usually. Although the recommended filter capacitors are 220nF TDK C0G, I had to substitute them with smaller 47nF capacitors with the same footprint which I happened to have on hand.
+
+
+There are many small touches that are indicative of a well-tested and well-thought-out design. For example, the 1kΩ resistors on the inputs of each op-amp prevent the input capacitances from causing current spikes. The feedback resistor on the filter op-amp is split and an additional capacitor added, which adds an extra order to the filter for faster rolloff. The addition of a sense input is also a nice touch. The bias input is an interesting feature, which sets the voltage at the lower end of the capacitors. If this is the same as the output voltage, the filter capacitors see no voltage across them, which might be helpful for reducing errors induced by dielectric absorption and leakage.
+
+
+The output ripple, now an order of magnitude smaller at 40μVpp, corresponds perfectly with the LTspice simulation. Although 40μVpp was a huge improvement over the discrete attempt, for a DAC that was 1μV settable, it was still undesirably large.
+
+
+Apart from the op-amp’s limited bandwidth, another factor contributing to filter ripple is finite open loop gain, where the op-amp can’t fully drive the summing junction to 0V, resulting in a square wave at that node. Taking a page from the multislope book, I decided to experiment with a composite configuration.
+
+
+An amusing anecdote - at certain compensation values, the composite amplifier oscillates at around 4MHz - LTspice simulates this with perfect correspondence to reality.
+
+
+However, reality decided not to cooperate with the simulation, and the simulated performance gains failed to materialize. I compared the simulation and circuit node-for-node, and each node except the output was exactly the same as in the simulation.
+
+
+Since I was not getting anywhere with the composite amplifier, I decided to desolder the capacitors and the OPA140, and replace the former with two smaller 100nF capacitors, almost equivalent to the 220nF capacitors Mark recommended, and the latter with a faster OPA828. This gave me the lowest measured ripple values yet - around 7μVpp, after I realized that my bad probing was having an influence on the measurements.
+
+
+Upon Mark’s recommendation, I also decided to swap the expensive and overkill dual TMUX6136 for an ADG419, a single SPDT switch. The raw INL decreased from hundreds to just 7 ppm, still not a problem for on-board correction.
+
+
+Now I had a μV-settable DAC that was capable of self-correction. After having come this far, needing to rely on an external multimeter to determine the polynomial coefficients felt like cheating. Having the calibration done on-board would result in a self contained, closed-loop system.
+
+
+To do this, a small, cheap and highly linear ADC would measure the DAC at multiple points. Those readings would be used to derive the polynomial coefficients needed to do the correction internally.
+
+
+I just so happened to have the right part on hand, thanks to a failed attempt at INL cancellation - the MCP3551, which I had to abandon mid-experiment because of the temperamental SPI interface.
+
+
+The ADC’s smooth cubic INL is not enough for a sub-ppm calibration. My initial idea to cancel out the INL was to do two measurements, one with the inputs swapped and one without, with the results of each measurement cancelling out the errors. Unsurprisingly, this idea has already been proposed in an old blog article.
+
+
+Investigating INL cancellation was the reason I bought this ADC. It took me long enough to realize that the idea wouldn’t work, however, because of the way number systems work - the errors would not cancel out like intended, but add up, resulting in no compensation at all. Jaromir’s proposed solution was to limit the input range of the ADC, so the DAC output range was scaled to the flattest portion of the INL.
+
+
+My previous attempts to talk to the ADC ended in either wrong codes or shutdown. In the end, the brute-force approach of constantly pulling the chip select pin high and polling the data pin to check the conversion status worked. A simple shorted-inputs noise test reveals more noise than the datasheet specifications, but after powering the reference pin from a dedicated 3.3V LDO, the numbers were back to normal.
+
+
+To feed the fully differential inputs, I will be using another board from the TMT application-specific lineup - the FDA-A-v1, a fully differential front-end based on the THP210 and a NOMCT resistor network, with some other fine details which capture months’ worth of development.
+
+
+The FDA PCBs were, of course, provided by Aisler, the sponsor of this video. They did a wonderful job as always - the guard traces are especially crisp and the ENIG finish is nice and matte.
+
+
+The NOMCT needed to populate this board will be salvaged from a much older project.
+
+
+The FDA board provides pads to trim the amplifier’s common mode rejection, which is basically how much of a signal applied to both inputs simultaneously makes it to the output. With no trimming, the CMRR is -86dB, which is already a very good number.
+
+
+Although my application does not require good CMRR, since one input will be permanently grounded anyway, I got fixated with trying to trim it down, which led to a few interesting side-projects.
+
+
+The easiest way to measure CMRR is to short the FDA inputs and feed in the biggest square wave my function generator can output - 20Vpp - and continuously plot the ADC readings while carefully trimming a potentiometer. 
+
+
+Once the square wave has disappeared into the noise floor, the CMRR is almost fully gone, down below -120dB.
+
+
+Now, the potentiometer’s exact value can be read to the highest resolution possible with my Keithley 2000… whose resistance ranges are unfortunately out of whack, so a simple calibration using some hand-me-down resistors is necessary, with the linear transfer function determined and back-calculated using Excel. Now, the readings from the meter can be plugged into the spreadsheet, which should hopefully deliver the real resistance.
+
+
+This resistance is then plugged into a modified Python script, which is based off of the one on Peter Märki’s website, which describes an interesting iterative trimming method using fixed E series resistances. Performing each stage guarantees hours of back-breaking fun.
+
+
+Unfortunately, this, among other trimming methods, was not enough, since CMRR always drifted by the next day. After realizing the pointlessness of the trimming, I gave up, and decided to equip the PCB with an I2C isolator, after which the ADC can be tested in the rack against the AD5791.
+
+
+The first results had a lot of drift, which I fixed by replacing the reference LDO with an LTC6655 2.5V reference. Reducing the reference from 3.3V to 2.5V meant the same input voltage would result in a larger swing at the ADC, increasing the INL error. Reducing the input voltage range resulted in a surprisingly flat line.
+
+
+With the ADC’s INL error taken care of, I used it to measure the output of the DAC. Since the ADC resolution is different from the DAC’s, I derive a slope and offset that I can apply to the ADC’s values so they correspond to the DAC’s. These values are then used to calculate polynomial coefficients, which are loaded into the RP2040 for correction. 
+
+
+Unsurprisingly, the ADC is able to correctly measure the DAC’s INL, and the calculated coefficients do indeed result in its cancellation.
+
+
+The final piece of the puzzle needed to completely close the loop was a polynomial regression algorithm, which I adapted from this website. In a few tests, the calculated values corresponded to Excel’s LINEST to 6 or 7 decimal places, which was perfectly adequate for me.
+
+
+Before I could finish the code that would bring everything together, I was faced by two major events that halted all further development of this project.
+
+
+The first was a mysterious fuzziness that affected the INL runs, causing values around zero to become randomly fuzzy. I traced the problem down to randomization of the input values during the INL run. Since I’d made a change in the connection of the output amplifier, which presented a 1uF and 1kΩ load to the output, settling time was affected, causing the fuzz. But the shape of the INL curve was now very different from the original quadratic. I replaced every active component in the DAC section, including the analog switch and the two op-amps on the filter board, but nothing fixed the problem.
+
+
+The second, which happened even as the DAC was on the bench, was a remarkable breakthrough by Mark - it seemed like he’d finally solved PWM DACs once and for all. That breakthrough will be the subject of the final video in the PWM DAC trilogy.
+
+
+Description:
+* https://www.simonsdialogs.com/2014/09/the-best-solution-most-likely-let-the-nonlinearities-inl-cancel-out/
+* https://vikramlearning.com/jntuh/notes/computer-programming-lab/write-a-c-program-to-implement-the-polynomial-regression-algorithm/124
