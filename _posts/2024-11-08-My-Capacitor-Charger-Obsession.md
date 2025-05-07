@@ -1,5 +1,5 @@
 ---
-category: drafts
+category: articles
 layout: default
 title: My Capacitor Charger Obsession
 ---
