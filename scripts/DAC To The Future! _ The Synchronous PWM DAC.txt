@@ -1,0 +1,221 @@
+﻿DAC To The Future! | PWM DAC 1 - Synchronous Filter
+
+
+There are many ways of dealing with problems, one of which is to throw money at it. Or, as in my case, throw someone else’s money around. The AD5791 used in my previous DAC project was an ADI sample, a thoughtful gift from a friend.
+
+
+Not everyone is so lucky, and being able to afford an AD5791 of your own, including supporting components, can get very expensive. Despite no expense being spared on this project, the linearity still ended up being rather disappointing, only achieving 0.5ppm.
+
+
+Although none of my current ADC projects have had a linearity anywhere near that, preparing for future success surely can’t hurt. So when I was sent this EDN Design Idea, by Stephen Woodward nonetheless, I was immediately interested[1].
+
+
+<intro>
+
+
+This unusual design uses pulse width modulation - a PWM DAC. The on time of a fixed-frequency square wave is varied in discrete steps, producing a waveform with an average voltage proportional to the duty cycle, which is just the on time divided by the period of the square wave.
+
+
+What’s more, the edges of the generated PWM signal can be made very accurate. In the race for more digits, the time-nuts are one full digit ahead of the volt-nuts. What this means for the rest of us is that even the cheapest crystal oscillator on the cheapest microcontroller board produces a relatively stable frequency with very low phase-noise or jitter on the edges, which in some cases is in the single-digit picoseconds. With a single-digit millisecond PWM period, the accuracy is in the order of one part in one billion.
+
+
+That was the easy part - the real problem is designing an analog filter that is capable of taking advantage of a PWM signal’s extreme linearity and producing a stable, ripple-free average.
+
+
+There are, of course, always people running to a PWM DAC discussion to propose using the analog subtraction filter, which seeks to remove ripple from a simple first-order filter by injecting a high-pass filtered inverse of the original PWM waveform. However, what many people fail to realize is that this filter has exactly the same output ripple and settling time as a second-order lowpass filter, negating the value of the added complexity.
+
+
+It took the likes of Stephen Woodward[4], who has been writing Design Ideas for EDN since the 1970s, to come up with a solution to the analog filter problem. Woodward is rather infamous for coming up with the most crazy circuit ideas - none of which seem to be tested, by the way - that even earned him a few mentions in the Art of Electronics.
+
+
+If a PWM signal was fed into an ideal integrator, the output would saturate in a few cycles. What the Woodward design does is to sample the integrator waveform using a sampling capacitor driven with a 50% duty cycle, and feed the sampled voltage through another integrator wrapped around the hold capacitor, back to the first integrator op-amp’s non-inverting input. This has the effect of skewing the current flowing into and out of the summing junction exactly such that the integrator remains balanced - if the RC time constant of the integrator matches the PWM period.
+
+
+Surprisingly enough, the idea of feeding a sampled version of the integrator waveform back to the summing junction is not a Woodward original. This method is first described in a paper from 1970[2], which calls it sectional average integration. This paper was thoughtfully cited by a similar EDN design idea, although this one does not feature feedback of any kind[3].
+
+
+HP used this sectional average integrator circuit in 1976’s HP4261 to accurately measure the average of a non-DC waveform. 
+
+
+What I found particularly enticing about the Woodward version is the claimed 1-cycle settling time. According to Falstad, that is not really true, but even a few cycles of settling time, compared to the several seconds needed by a traditional passive RC filter, was enough to get me motivated to try building the circuit.
+
+
+The first attempt is relatively simple, needing only a few carefully selected  parts. The reference is an LT1021 5V buried zener that I  happened to have on hand, doubled and inverted using some high-quality 0.1% Chinesium 0805 resistors and an OPA2140, another of which also serves as the PWM and sample and hold integrator. The PWM and sample switches are two halves of the TMUX6136, a precision low-leakage low-charge injection SPDT analog switch from Texas Instruments.
+
+
+Controlling the circuit is, of course, an RP2040. The PWM peripheral is powerful in its simplicity - I can set both the system clock and PWM peripheral clock divider to any arbitrary value, giving me incredible flexibility in timing. Of course, the fractional part of the divider value goes untouched, since I don’t want any jitter or timing inaccuracy. The counter wrap value can also be selected with similar flexibility up to 16 bits.
+
+
+The resulting DAC has some pretty but hard-to-understand waveforms. The integrator is mostly centered around zero, rising towards the peak value at mid-scale and then falling back. The sample and hold circuit samples during the first half of the PWM period, and goes into hold exactly as the integrator crosses zero, preventing transient current in the hold capacitor with a steady output.
+
+
+I was quick to set up an INL test, which resulted in this curve. Being perfectly quadratic is not necessarily a bad thing, in fact, it is exactly the sort of behaviour that is expected from a voltage-switched PWM DAC, as described in modern-calibrator-design.pdf, which is likely a Pickering work. 
+
+
+The quadratic shape is the result of a mismatch in the on resistances of the normally open and normally closed throws of the analog switch, which can be estimated roughly by looking at the on resistance vs terminal voltage chart usually found in the datasheet.
+
+
+Getting Excel to fit a quadratic curve to the INL plot and subtracting it results in a residue INL of less than ±1ppm, which is quite impressive for such a simple circuit.
+
+
+Since the design calls for the PWM period to match the integrator RC time constant, I was curious to see what effect changing the PWM frequency by a small amount would have. With the 1V steps I was using for the INL tests, this didn’t make any difference - the real problem came when using a smaller step size, at which point the INL worsened greatly, highlighting the importance of good time constant matching.
+
+
+Also dependent on the time constant matching is the settling. Since this is a closed-loop system with feedback, the matching can be thought of as a gain factor - when the product of R and C matches the PWM period, the duty cycle and output swing relative to the reference voltages have a 1 to 1 relationship. If the PWM period is larger than R time C, the output overshoots, and settling has a slight ringing characteristic, if it is smaller, the settling is more gradual, and at an exact match, settling takes two cycles to 99.9% of the setpoint, as described in the original paper from 1970.
+
+
+Although the timing requirements are rather strict, the polarities of the PWM and sample/hold signal do not matter, only affecting the gain polarity.
+
+
+Since the INL is still rather spiky, I decided to implement a trick I learned while working on the multislope ADC. The April 1989 edition of the HP journal mentions that latches were used to synchronize the current steering switches, essentially reclocking the jittery control signals with a stable oscillator.
+
+
+I was lucky enough to find a low-jitter crystal on LCSC, specified to have an RMS phase noise of 0.7ps. In combination with a 74AHCT273 D-latch, it should clean up the PWM signals coming from the Pico, which has a measured jitter of around 70psrms, which contributes approximately 0.1ppm to the INL.
+
+
+Unfortunately, this didn’t seem to have much of an effect, but I decided to keep it just in case.
+
+
+The next task was to deal with the quadratic in the room. Directly compensating for on resistance mismatch, although possible, is inelegant and messy. Luckily, the solution is already known to us from the delta-sigma video. The DAM switch patent describes a curious op-amp circuit, which some may know as a negative-resistance synthesizer. Instead of consuming current, it pushes a current into a voltage source, proportional to its voltage. 
+
+
+In other words, it can buffer the output of an analog switch, without directly being in series with it. If the resistor values are calculated correctly, no current flows into and out of the analog switch, except during the op-amp’s slew time. Connecting one end of the circuit to the DC output and the other to the analog switch lets the op-amp calculate the exact current that will flow into and out of the integrator resistor, as the difference between either analog switch state, that is, the reference voltages, and the output. On the oscilloscope, it looks something like this - as the duty cycle changes, the output of the compensation op-amp changes to keep the correct current flowing through the integrator resistor. Of course, in the real world, the compensation signal is not perfect - the rise time of the analog switch is much faster than the 200V/μs slew rate of the OPA810 fast JFET-input amplifier I selected for this task. Also not ideal is the overshoot and ringing, which just barely gets clipped by the supply rails.
+
+
+And just like that, the quadratic is gone, leaving us with a flat line… mostly, except for the ugly artefacts at + and - full scale, which I haven’t yet explained, but Modern calibrator design already has an answer to - a PWM DAC is not supposed to be run at 0% and 100% duty cycles, that is, neither throw should be turned on continuously.
+
+
+After sacrificing the endpoints, the INL is finally down to the level of the AD5791 - and I’m not sure how much of it is coming from my Keithley 2000. So to find out, I’ll quickly package the board and send it off to be tested under the watchful eyes of the HP3458A.
+
+
+The results speak for themselves - the world’s most linear production multimeter has declared the Woodward synchronous PWM DAC linear down to ±0.1ppm. But once again, an ugly artefact rears its head - there is a 0.3ppm spike at zero.
+
+
+Zooming into zero by successively decreasing the range and increasing the resolution of the INL runs by 10, it is clear that the issue is localized around zero, and leaves a smear over 10mV.
+
+
+It was Mark who figured out that this was happening because of the PWM and sample signal edges lining up, and this was proven by simply moving the edge of the sample signal a few counts, which correspondingly moves the spike. With enough counts, the spike is moved entirely outside the output range of interest, finally resulting in a spotless ±0.1ppm INL.
+
+
+This modification from the original scheme was not without a catch, since the readings were now significantly noisier. The INL plots look so clean only because I am averaging the INL over 10 independent runs, with each setpoint being tested in a random order to prevent correlation between successive steps.
+
+
+It turns out that the Woodward circuit has been replicated quite recently[5], but the INL still ended up being quadratic, and even after correction, never really reached the sub-ppm linearity I was seeing. It looks like the secret of the compensation amplifier is not yet widespread. And moreover… moving on…
+
+
+With the board back home, it’s clear that decreasing the sample and hold duty cycle drastically to stay out of the PWM range had a negative effect on settling time. What is happening is that the sample capacitor does not have time to completely charge to the integrator voltage before it is set to hold mode, during which it feeds back the partial output voltage and destabilizes the loop.
+
+
+With the circuit having shown 0.1ppm potential, I decided it was worth using up some of my dwindling stock of expensive components for the next revision. The reference, for example, is an ADR1399, which, in combination with an NOMCT 10kΩ resistor network, forms the ±10.5V references. 
+
+
+Here’s a small quality-of-life upgrade from my sponsor, Aisler - a TMT-compatible breakout board for the ADR and supporting components.  The ADR itself is designed to be surface mounted to the PCB. I thought I was being clever by using this 3D-printed jig to bend the leads perfectly, but if I had done so, I would have no way of getting the ADR out.
+
+
+Since I was going all out, I decided to splurge on some Wima MKP polypropylene. Film capacitors are the only real choice for precision applications that need a relatively large capacitance.
+
+
+The finished product looks good, even if I say so myself. I’ve had problems with projects looking good but not working well, but hopefully this one will be different… right?
+
+
+The circuit is essentially the same as before, except for the larger capacitors in all positions. Also on board is the TL1963 fast-response LDO, which I discovered in the last video.
+
+
+I will take this opportunity to point out that modern analog switches are blazing fast - the propagation delay is often mistaken for switch rise time. The latter can be estimated based on the -3dB bandwidth specified in the datasheet.
+
+
+Version two has the requisite linearity, but is somehow noisier than the previous revision, despite the larger capacitors. To characterize this noise better, I added a x10000 0.1Hz to 1kHz amplifier to the output. It looks to me like the bigger capacitors are loading the op-amps harder, causing the large downward spike at the start of each sample period.
+
+
+The higher frequency spikes are caused by the USB cable, of course, and also have this mysterious repetitive pattern to them.
+
+
+Another problem could have been avoided with better simulation - I wanted to implement an on-resistance compensation circuit similar to the previous version, but using the 50kΩ network that also formed the integrator R would saturate the compensation amplifier. Since this was not crucial to the operation of the DAC, I decided to not populate the circuit during testing.
+
+
+Each capacitor was measured using a DMM to find the most closely matched pair to use in the sample and hold circuit, but I obviously messed up and soldered the capacitors in the wrong positions.  Fixing that mistake didn’t help the noise as I had expected.
+
+
+To test the theory of the larger capacitors loading the op-amps, I bodged in smaller 100nF C0G capacitors to see the effect on the output ripple, and it was predictably worse. But if I change the duty cycle of the sample and hold signal, it’s clear that the sudden jumps in the waveform are a result of the sampled architecture. Even smaller capacitors make the ripple worse, and touching the sample capacitor injects some mains noise into the sensitive junction, and demonstrates how choosing the right frequency can reject it.
+
+
+It was quite disappointing, and in a way, liberating, to see that simply throwing expensive parts at a problem doesn’t always fix it. Luckily, the TMT prototyping system lets you quickly tear down and rebuild a prototype.
+
+
+The third iteration is more inspired by the multislope ADC’s current steering, and will hopefully benefit from all its advantages. The reference and current switching section will be built according to a layout plan I came up with for the delta-sigma project.
+
+
+The biggest change, apart from the current steering architecture, will be the use of a more traditional sample-and-hold circuit, like the one found in the LF398 sample-and-hold IC. It would be arguably easier to just buy the chip, but before investing in a rather expensive and borderline obsolete component, I would like to test the basic functionality using the parts I have on hand.
+
+
+The discrete sample-and-hold circuit consists of an input buffer which wraps around the analog switch, sample capacitor and also the output buffer, basically nullifying its offset error. A pair of antiparallel diodes prevents the input buffer going open loop when the sample switch is open.
+
+
+Even the most basic discrete implementation of this circuit  performs surprisingly well - here’s the sample signal, the input waveform, and the output of the circuit - which follows the input when the sample signal is high, and holds the sampled voltage perfectly, a testament to the incredibly low bias current of the OPA140, the dual version of which I used to build this circuit.
+
+
+Using a smaller input signal demonstrates that there are no artefacts when the circuit switches from sample to hold mode. And as far as I can see, there is no droop over the 175ms hold period, unless I artificially induce some by changing the probe to 1X mode, with a 1MΩ input impedance.
+
+
+The large sample capacitor, along with the on resistance of the analog switch, forms an RC lowpass filter, which limits the bandwidth of the circuit. This is not critical for this application, since the frequencies involved are very low, and my redesign does not call for sampling a changing signal.
+
+
+By slightly changing the frequency of the input relative to the sample and hold signal, the start and end voltage of each sample period are slightly different, which has the effect of aliasing the input frequency down - this is essentially how the Tektronix Type S-1 sampling head worked.
+
+
+Apart from the multislope-style reference, scaling and V-to-I conversion and steering using a TMUX1134, the rest of the parts are re-used, although in a different configuration.
+
+
+Lately, I’ve been using QSPICE to draft schematics, which I find very pleasant. This is the circuit as-built, and the operation can best be explained using the oscilloscope.
+
+
+During the first PWM cycle, the integrator ramps up from the 0V reset state to a value proportional to the duty cycle - an up period and a down period, after which the PWM signals are blanked, that is, neither reference is switched, preserving the DC value of the previous period. If no feedback was applied, the integrator would simply saturate during the next PWM cycle, so every PWM cycle after the first, the output of the sample and hold circuit is fed back into the integrator, skewing the slopes so it starts and ends at the same voltage, which is proportional to the duty cycle. The integrator is sampled during the blanking periods, to give the sample and hold circuit a stable voltage to work with, hopefully eliminating the output spikes.
+Although the linearity is greatly improved, with no quadratic effect that is a side-effect of switching on the reference side, the spikes are still there, but with reduced amplitude.
+
+
+Thanks to the flexibility of this architecture, I can try a different method of generating a DC output using the same circuit. Instead of using feedback, I reset the integrator after each sampling period. This idea is also not new, the integrate-sample-reset method having been proposed on the electrical engineering Stack Exchange[6]. However, the noise and INL was rather unsatisfactory, so I had to abandon this approach.
+
+
+The next control scheme was inspired by the original paper. The waveforms in the simplified diagram of figure 3, the PWM is run continuously, and the sample pulse is very narrow. However, figure 6 presents a more plausible scheme, with each reference being turned on individually, with a blanking period in between.
+
+
+What I came up with was slightly harder to implement in code, but thanks to the flexibility of the PWM peripheral, I managed to make it work. Only one reference is turned on at any given time depending on output polarity, with its width proportional to the input code. Feedback is almost continuous except for a small blanking interval at the end of each PWM period, during which the sample and hold circuit samples the integrator.
+
+
+This had the effect of a slight noise reduction, and a triangular INL - this happens because the gain of each polarity is not exactly the same, thanks to the positive and negative references not having the exact same absolute value.
+
+
+To fix this, instead of having one reference turned on during a given PWM cycle, both references are fully on, and the duty cycle of one of them is reduced according to the output magnitude and polarity.
+
+
+Instead of the expected INL improvement, I got exactly the previous result but flipped.
+
+
+I had one final idea, but that needed some extreme code to get working. Since complementary PWM makes a blanking interval at the end of each period nearly impossible to implement, I had to treat multiple PWM periods as one large unit - the last out of 10 periods is blanked, while the others are either fully on at 100% duty cycle, or fully off at 0%, with one cycle having an edge. The number of full cycles is calculated as the input code divided by the counter wrap value of each individual cycle, the fractional cycle is just the input code modulo counter wrap, and the remaining cycles are zero. The biggest advantage of this method is that we are freed from the limitation of the counter wrap value, which is around 65 thousand, given the 16-bit counter, making an arbitrary resolution possible, within reason, of course.
+
+
+I was pleasantly surprised to see this scheme work as intended, with each reference being turned on in a complementary fashion, with a blanking period where the integrator is sampled.
+
+
+This led to the lowest measured noise for this project, which was around 20μVpp after decreasing the width of the sample pulse even more. The remaining noise seems to have a shape similar to that of the integrator waveform, suggesting that the analog switch is still leaking something. Once again, the April 1989 HP journal presents a ppm-optimized sample and hold circuit, but I don’t know if I want to replicate it. The INL was also finally down to ±0.5ppm, which I was unable to decrease further despite other modifications.
+
+
+By this time, I had sunk nearly four months into what was intended to be a simple weekend project to try a circuit that had piqued my curiosity, but as with all things, turned into a months-long venture to squeeze out every last fraction of a ppm from the INL.
+
+
+Since I have reached the effort-reward plateau for this project with no further improvement in sight, I will have to call it a day. I hate leaving projects unfinished, but I need to quickly move on to finishing more important things while I have the time.
+
+
+It was not entirely a waste of time, however, since I learned quite a few things along the way - Using the RP2040’s PWM peripheral and associated interrupts, optimizing the planned layout for the delta-sigma project, investigate the effect of various PWM methods on INL, and the sectional average integrator also gave me a few ideas for a delta-sigma control scheme.
+
+
+And regarding PWM DACs, the future still holds possibilities.
+
+
+References:
+[1]: https://www.edn.com/fast-settling-synchronous-pwm-dac-filter-has-almost-no-ripple/
+[2]: https://ieeexplore.ieee.org/document/4313915
+[3]: https://www.edn.com/pwm-dac-settles-in-one-period-of-the-pulse-train/
+[4]: https://www.edn.com/credit-a-forks-shorting-the-toaster-q-and-a-with-steve-woodward/
+[5]: https://www.eevblog.com/forum/projects/fast-settling-pwm-dac/
+[6]: https://electronics.stackexchange.com/questions/573072/low-ripple-sample-and-hold-pwm-dac
