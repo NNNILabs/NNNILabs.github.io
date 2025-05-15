@@ -221,5 +221,14 @@ The second, which happened even as the DAC was on the bench, was a remarkable br
 
 
 Description:
-* https://www.simonsdialogs.com/2014/09/the-best-solution-most-likely-let-the-nonlinearities-inl-cancel-out/
-* https://vikramlearning.com/jntuh/notes/computer-programming-lab/write-a-c-program-to-implement-the-polynomial-regression-algorithm/124
+
+00:40 https://xdevs.com/doc/Fluke/5700a/Fluke--5700A--service--ID10104.pdf
+01:28 https://www.analog.com/en/resources/design-notes/dc-accurate-filter-eases-pll-design.html
+01:36 http://bitsavers.informatik.uni-stuttgart.de/components/burrBrown/Burr_Brown_Applications_of_Operational_Amplifiers_3rd_Generation_Techiques_1973.pdf
+01:42 https://github.com/macaba/TheManhattanToolkit/tree/main/source/application%20specific/LPF-A-v1
+04:52 http://www.aholme.co.uk/Frac2/Mash.htm
+09:37 https://www.desmos.com/calculator/xozvkho08f
+10:07 https://www.analog.com/en/resources/technical-articles/spice-differentiation.html
+15:49 https://www.simonsdialogs.com/2014/09/the-best-solution-most-likely-let-the-nonlinearities-inl-cancel-out/
+18:26 https://www.positron.ch/iterativetrimmer/
+19:58 https://vikramlearning.com/jntuh/notes/computer-programming-lab/write-a-c-program-to-implement-the-polynomial-regression-algorithm/124
