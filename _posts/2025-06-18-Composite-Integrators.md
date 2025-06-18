@@ -1,10 +1,10 @@
 ---
 category: articles
 layout: default
-title: Composite Amplifiers
+title: Composite Integrators
 ---
 
-# Composite Amplifiers
+# Composite Integrators
 
 A selection of composite integrators found in various high-resolution bench DMMs is presented in the figure below.
 
