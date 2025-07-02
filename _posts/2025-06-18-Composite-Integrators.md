@@ -24,6 +24,8 @@ However, the performance of a single amplifier is inadequate for high-resolution
 
 All integrating ADCs have at their heart a composite configuration. The elements that make up the composite amplifier usually have predictable properties - the first stage usually consists of a precision op-amp with a low offset voltage, low bias current and a high open-loop gain, while having a relatively low or moderate bandwidth in the single-digit megahertz. The second stage is usually a poor performer when it comes to precision criteria. The offset, bias and gain specifications are laughable at best. Millivolts, microamps and double-digit dB gain are common. However, the bandwidth and slew rate leave precision amplifiers coughing in the dust - gain-bandwidth products in the upper tens or several hundreds of megahertz, and slew rates that rival the output transition times of logic gates.<br><br>
 
+<div align = "center">
+
 <table border="1" cellpadding="6" cellspacing="0" style="border-collapse: collapse; text-align: center;">
   <thead>
     <tr>
@@ -76,6 +78,8 @@ All integrating ADCs have at their heart a composite configuration. The elements
     </tr>
   </tbody>
 </table><br><br>
+
+</div>
 
 
 [^Graeme_OOP]: J. Graeme, *Optimizing Op Amp Performance*, McGraw-Hill, 1996.
