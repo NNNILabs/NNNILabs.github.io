@@ -26,7 +26,7 @@ All integrating ADCs have at their heart a composite configuration. The elements
 
 <div align = "center">
 
-<table border="1" cellpadding="6" cellspacing="0" style="border-collapse: collapse; text-align: center;">
+<table border="1" cellpadding="10" cellspacing="0" style="border-collapse: collapse; text-align: center;">
   <thead>
     <tr>
       <th rowspan="2">Parameter</th>
