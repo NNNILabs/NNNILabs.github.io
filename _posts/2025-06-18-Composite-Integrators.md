@@ -26,7 +26,6 @@ All integrating ADCs have at their heart a composite configuration. The elements
 
 <div align = "center">
 
-<figure style="text-align: center; margin: 2em 0;">
   <table border="1" cellpadding="6" cellspacing="0" style="border-collapse: collapse; text-align: center; margin: 0 auto;">
     <thead>
       <tr>
@@ -110,14 +109,17 @@ All integrating ADCs have at their heart a composite configuration. The elements
     </tbody>
   </table>
 
-  <figcaption style="font-weight: bold; margin-top: 0.5em;">
-    Key specifications for the operational amplifiers used in the above set of schematics.
-  </figcaption>
-</figure>
-
-
 </div><br><br>
 
+The above table presents a comparision of the op-amps used in the composite integrators of various high-resolution DMMs. The general trend outlined above holds - the 'slow' op-amps are indeed that, but have much lower offset voltages and bias currents. Along with being 'fast', those amplifiers have greatly reduced DC specifications.
+
+Now, as appealing as it might seem to simply connect two amplifiers together without thinking about how they might interact, this is a recipe for instability. A composite amplifier embeds one feedback loop *within* another, and if they are unsuitably matched, the overall circuit cannot be relied upon to not oscillate.
+
+Composite amplifiers aside, an analysis of the stability of *any* amplifier or control loop is usually fraught with mathematics and highly unintuitive. It struck me as quite opaque when I read in The Art of Electronics that a feedback capacitor across the upper resistor of a gain-setting divider was meant to reduce gain before the phase crossed 180 degrees. A capacitor does roll off the frequency response, but does it not *itself* add a phase shift? Another mystery was decompensated op-amps - why did they have a minimum gain, and where did that number come from?
+
+I was oblibious to means of answering such questions till I came across an application bulletin from Burr-Brown, written by one Jerald Graeme. It was through this bulletin that was I was first made aware of his graphical method to determine an op-amp circuit's stability.
+
+## The Graeme Way
 
 [^Graeme_OOP]: J. Graeme, *Optimizing Op Amp Performance*, McGraw-Hill, 1996.
 
