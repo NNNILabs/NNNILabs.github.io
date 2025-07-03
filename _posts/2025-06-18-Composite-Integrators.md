@@ -110,7 +110,7 @@ All integrating ADCs have at their heart a composite configuration. The elements
 </table>
 
 
-</div>
+</div><br><br>
 
 
 [^Graeme_OOP]: J. Graeme, *Optimizing Op Amp Performance*, McGraw-Hill, 1996.
