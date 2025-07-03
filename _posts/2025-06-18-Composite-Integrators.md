@@ -26,88 +26,94 @@ All integrating ADCs have at their heart a composite configuration. The elements
 
 <div align = "center">
 
-<table border="1" cellpadding="6" cellspacing="0" style="border-collapse: collapse; text-align: center;">
-  <thead>
-    <tr>
-      <th rowspan="2">Parameter</th>
-      <th colspan="3">Slow</th>
-      <th colspan="6">Fast</th>
-    </tr>
-    <tr>
-      <th>OP27</th>
-      <th>OPA177</th>
-      <th>LT1001</th>
-      <th>AD711</th>
-      <th>AD829</th>
-      <th>OPA602</th>
-      <th>AD744</th>
-      <th>LM6361</th>
-      <th>AD848</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <td>V<sub>os</sub></td>
-      <td>10 μV</td>
-      <td>±10 μV</td>
-      <td>10 μV</td>
-      <td>100 μV</td>
-      <td>100 μV</td>
-      <td>0.5 mV</td>
-      <td>0.25 mV</td>
-      <td>22 mV</td>
-      <td>0.2 mV</td>
-    </tr>
-    <tr>
-      <td>I<sub>b</sub></td>
-      <td>±10 nA</td>
-      <td>±0.5 nA</td>
-      <td>±0.5 nA</td>
-      <td>15 pA</td>
-      <td>3.3 μA</td>
-      <td>±1 pA</td>
-      <td>30 pA</td>
-      <td>5 μA</td>
-      <td>6.6 μA</td>
-    </tr>
-    <tr>
-      <td>A<sub>ol</sub></td>
-      <td>126 dB</td>
-      <td>135 dB</td>
-      <td>120 dB</td>
-      <td>112 dB</td>
-      <td>100 dB</td>
-      <td>100 dB</td>
-      <td>112 dB</td>
-      <td>70 dB</td>
-      <td>86 dB</td>
-    </tr>
-    <tr>
-      <td>GBW</td>
-      <td>8 MHz</td>
-      <td>0.6 MHz</td>
-      <td>0.8 MHz</td>
-      <td>4 MHz</td>
-      <td>750 MHz</td>
-      <td>6.5 MHz</td>
-      <td>13 MHz</td>
-      <td>35 MHz</td>
-      <td>175 MHz</td>
-    </tr>
-    <tr>
-      <td>Slew Rate</td>
-      <td>2.8 V/μs</td>
-      <td>0.3 V/μs</td>
-      <td>0.25 V/μs</td>
-      <td>20 V/μs</td>
-      <td>230 V/μs</td>
-      <td>35 V/μs</td>
-      <td>75 V/μs</td>
-      <td>200 V/μs</td>
-      <td>300 V/μs</td>
-    </tr>
-  </tbody>
-</table>
+<figure style="text-align: center; margin: 2em 0;">
+  <table border="1" cellpadding="6" cellspacing="0" style="border-collapse: collapse; text-align: center; margin: 0 auto;">
+    <thead>
+      <tr>
+        <th rowspan="2">Parameter</th>
+        <th colspan="3">Slow</th>
+        <th colspan="6">Fast</th>
+      </tr>
+      <tr>
+        <th>OP27</th>
+        <th>OPA177</th>
+        <th>LT1001</th>
+        <th>AD711</th>
+        <th>AD829</th>
+        <th>OPA602</th>
+        <th>AD744</th>
+        <th>LM6361</th>
+        <th>AD848</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>V<sub>os</sub></td>
+        <td>10 μV</td>
+        <td>±10 μV</td>
+        <td>10 μV</td>
+        <td>100 μV</td>
+        <td>100 μV</td>
+        <td>0.5 mV</td>
+        <td>0.25 mV</td>
+        <td>22 mV</td>
+        <td>0.2 mV</td>
+      </tr>
+      <tr>
+        <td>I<sub>b</sub></td>
+        <td>±10 nA</td>
+        <td>±0.5 nA</td>
+        <td>±0.5 nA</td>
+        <td>15 pA</td>
+        <td>3.3 μA</td>
+        <td>±1 pA</td>
+        <td>30 pA</td>
+        <td>5 μA</td>
+        <td>6.6 μA</td>
+      </tr>
+      <tr>
+        <td>A<sub>ol</sub></td>
+        <td>126 dB</td>
+        <td>135 dB</td>
+        <td>120 dB</td>
+        <td>112 dB</td>
+        <td>100 dB</td>
+        <td>100 dB</td>
+        <td>112 dB</td>
+        <td>70 dB</td>
+        <td>86 dB</td>
+      </tr>
+      <tr>
+        <td>GBW</td>
+        <td>8 MHz</td>
+        <td>0.6 MHz</td>
+        <td>0.8 MHz</td>
+        <td>4 MHz</td>
+        <td>750 MHz</td>
+        <td>6.5 MHz</td>
+        <td>13 MHz</td>
+        <td>35 MHz</td>
+        <td>175 MHz</td>
+      </tr>
+      <tr>
+        <td>Slew Rate</td>
+        <td>2.8 V/μs</td>
+        <td>0.3 V/μs</td>
+        <td>0.25 V/μs</td>
+        <td>20 V/μs</td>
+        <td>230 V/μs</td>
+        <td>35 V/μs</td>
+        <td>75 V/μs</td>
+        <td>200 V/μs</td>
+        <td>300 V/μs</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <figcaption style="font-weight: bold; margin-top: 0.5em;">
+    Key specifications for the operational amplifiers used in the above set of schematics.
+  </figcaption>
+</figure>
 
 
 </div><br><br>
