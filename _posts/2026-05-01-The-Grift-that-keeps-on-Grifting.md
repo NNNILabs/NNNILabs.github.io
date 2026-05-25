@@ -1,5 +1,5 @@
 ---
-category: articles
+category: trash
 layout: default
 title: The AI Era - The Grit that Keeps on (being) Gritty
 ---
