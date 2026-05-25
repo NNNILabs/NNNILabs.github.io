@@ -1,7 +1,7 @@
 ---
 category: trash
 layout: default
-title: The "AI" Era - The Grit that Keeps on (being) Gritty
+title: "The \"AI\" Era - The Grit that Keeps on (being) Gritty"
 ---
 
 The ease with which I can send people my thoughts about this matter is thrown off-balance by the unease the topic has been causing me in the year since I wrote my last piece. Many events in my teenage years led me to believe that time did indeed heal all wounds. However, something changed in the recent past that seems to have turned that saying on its head. Time has always had this element of causality and linearity to it - civilizations have come and gone, buried under the dust and rubble left behind by their successors. This linearity has now turned into a strange kaleidoscope or Zen table, reminescent of the desert; eternal winds shift the sand dunes slowly through a vast, empty landscape, burying some while exposing the others long gone. There is no guarantee that a kaleidoscope will repeat itself, but because of the finite nature of the beads and little pieces of colourful material and the space they occupy, the probability of a pattern repeating itself exists, albeit infinitesimally small.
