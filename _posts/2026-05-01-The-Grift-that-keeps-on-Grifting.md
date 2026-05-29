@@ -4,6 +4,10 @@ layout: default
 title: "The \"AI\" Era - The Grit that Keeps on (being) Gritty"
 ---
 
+Previous article: [It might be A but it is certainly not I!](https://nnnilabs.net/trash/2024/11/22/It-might-be-A-but-it-is-certainly-not-I!.html){:target="_blank"}
+
+# The "AI" Era - Accept It Or Die
+
 The ease with which I can send people my thoughts about this matter is thrown off-balance by the unease the topic has been causing me in the year since I wrote my last piece. Many events in my teenage years led me to believe that time did indeed heal all wounds. However, something changed in the recent past that seems to have turned that saying on its head. Time has always had this element of causality and linearity to it - civilizations have come and gone, buried under the dust and rubble left behind by their successors. This linearity has now turned into a strange kaleidoscope or Zen table, reminescent of the desert; eternal winds shift the sand dunes slowly through a vast, empty landscape, burying some while exposing the others long gone. There is no guarantee that a kaleidoscope will repeat itself, but because of the finite nature of the beads and little pieces of colourful material and the space they occupy, the probability of a pattern repeating itself exists, albeit infinitesimally small.
 
 There is not much that has changed the size and shape of the desert. The winds can only blow so hard, and the sand dunes can only move so fast. The rapid advancement of technology has, however, resulted in the spread of wormholes across the landscape. There weren't many to begin with, so any travelling dune which happened to fall into one was likely to be transported to a place distant and unknown. Exponential growth, which models many natural phenomena with amazing accuracy, dictated that the wormholes would eventually outnumber the sand dunes. With nowhere else to go, vast amounts of sand are blown around in the winds, being everywhere, and nowhere, at the same time.

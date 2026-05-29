@@ -4,6 +4,8 @@ layout: default
 title: It might be A but it is certainly not I!
 ---
 
+Follow-up article: [The "AI" Era](https://nnnilabs.net/trash/2026/05/01/The-Grift-that-keeps-on-Grifting.html){:target="_blank"}
+
 # It might be A but it is certainly not I!
 
 <span id="dropcap">C</span>ertainly one of the biggest debacles of the mid-2020s is the hype surrounding what is aggressively being marketed and pushed as AI.[^1]
